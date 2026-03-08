@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="35" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="18">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="35" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="21">
  <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16" tilecount="242" columns="22">
   <image source="tile.png" trans="ff00ff" width="352" height="176"/>
+  <tile id="6" type="platform"/>
+  <tile id="7" type="platform"/>
+  <tile id="8" type="platform"/>
+  <tile id="39" type="platform"/>
+  <tile id="40" type="platform"/>
+  <tile id="41" type="platform"/>
+  <tile id="94" type="platform"/>
+  <tile id="95" type="platform"/>
+  <tile id="96" type="platform"/>
+  <tile id="182" type="platform"/>
+  <tile id="183" type="platform"/>
+  <tile id="184" type="platform"/>
  </tileset>
  <layer id="2" name="ground" width="35" height="20">
   <data encoding="csv">

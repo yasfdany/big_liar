@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.dart';
+import 'package:big_brother/entities/hero/behavior/one_way_platform_collision_behavior.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -14,10 +15,20 @@ class HeroEntity extends PositionedEntity {
   }) : super(
           size: Vector2.all(32),
           behaviors: [
-            PropagatingCollisionBehavior(RectangleHitbox()),
+            PropagatingCollisionBehavior(
+              RectangleHitbox(
+                position: Vector2(9, 0),
+                size: Vector2(14, 32),
+              ),
+            ),
+            OneWayPlatformCollisionBehavior(),
             KeyboardMovementBehavior(),
           ],
         );
+
+  double verticalVelocity = 0;
+  bool isOnGround = false;
+  double previousY = 0;
 
   late final SpriteAnimationGroupComponent<HeroState> _animationComponent;
 

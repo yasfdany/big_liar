@@ -7,6 +7,7 @@ import 'package:big_brother/entities/item/melon.dart';
 import 'package:big_brother/entities/item/orange.dart';
 import 'package:big_brother/entities/item/pineapple.dart';
 import 'package:big_brother/entities/item/strawberry.dart';
+import 'package:big_brother/entities/level/one_way_platform.dart';
 import 'package:collection/collection.dart';
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
@@ -65,6 +66,35 @@ class LevelEntity extends PositionedEntity {
 
     // Add the tiled map as a child to visually represent this entity
     await add(tiledMap);
+
+    // Extract one-way platforms from the ground layer
+    final groundLayer = tiledMap.tileMap.getLayer<TileLayer>('ground');
+    if (groundLayer != null) {
+      final tileData = groundLayer.tileData;
+      if (tileData != null) {
+        for (var y = 0; y < tileData.length; y++) {
+          for (var x = 0; x < tileData[y].length; x++) {
+            final tile = tileData[y][x];
+            // Get the tile object to check its class/type
+            final tileObj = tiledMap.tileMap.map.tileByGid(tile.tile);
+            if (tileObj != null &&
+                (tileObj.class_ == 'platform' || tileObj.type == 'platform')) {
+              final platformPosition = Vector2(
+                x * tiledMap.tileMap.destTileSize.x,
+                y * tiledMap.tileMap.destTileSize.y,
+              );
+              // Adding OneWayPlatform
+              add(
+                OneWayPlatform(
+                  position: platformPosition,
+                  size: tiledMap.tileMap.destTileSize,
+                ),
+              );
+            }
+          }
+        }
+      }
+    }
 
     final startPositions = (positionGroups?.objects ?? [])
         .firstWhereOrNull((e) => e.name == 'start')

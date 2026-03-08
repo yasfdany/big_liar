@@ -7,7 +7,7 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     with KeyboardHandler, HasGameReference {
   KeyboardMovementBehavior({
     this.speed = 200,
-    this.jumpForce = 400,
+    this.jumpForce = 300,
     this.gravity = 1000,
   });
 
@@ -17,8 +17,7 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
   double _horizontalMovement = 0;
   bool _isJumping = false;
-  final double _verticalVelocity = 0;
-  final bool _isOnGround = false;
+  bool _hasDoubleJumped = false;
 
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
@@ -32,8 +31,13 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       _horizontalMovement = 0;
     }
 
-    if (keysPressed.contains(LogicalKeyboardKey.space) && _isOnGround) {
-      _isJumping = true;
+    if (keysPressed.contains(LogicalKeyboardKey.space)) {
+      if (parent.isOnGround) {
+        _isJumping = true;
+      } else if (!_hasDoubleJumped) {
+        _isJumping = true;
+        _hasDoubleJumped = true;
+      }
     }
 
     return super.onKeyEvent(event, keysPressed);
@@ -41,48 +45,49 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
   @override
   void update(double dt) {
-    // Apply horizontal movement
-    parent.position.x += _horizontalMovement * speed * dt;
-
-    // Apply jumping
-    // if (_isJumping) {
-    //   _verticalVelocity = -jumpForce;
-    //   _isOnGround = false;
-    //   _isJumping = false;
-    // }
-
-    // Apply gravity
-    // _verticalVelocity += gravity * dt;
-    // parent.position.y += _verticalVelocity * dt;
-
-    // Basic ground collision for testing purposes since proper platform
-    // collisions might require level map integration.
-    // final groundY =
-    //     game.size.y - parent.size.y / 2 - 50; // Arbitrary ground level
-    // if (parent.position.y >= groundY) {
-    //   parent.position.y = groundY;
-    //   _verticalVelocity = 0;
-    //   _isOnGround = true;
-    // } else {
-    //   _isOnGround = false;
-    // }
-
-    // // Update animations based on state
-    // if (!_isOnGround) {
-    //   if (_verticalVelocity < 0) {
-    //     parent.state = HeroState.jump;
-    //   } else {
-    //     parent.state = HeroState.fall;
-    //   }
-    // } else {
-    if (_horizontalMovement != 0) {
-      parent.state = HeroState.run;
-    } else {
-      parent.state = HeroState.idle;
+    if (parent.isOnGround) {
+      _hasDoubleJumped = false;
     }
-    // }
 
-    // Flip sprite depending on horizontal movement direction
+    if (!parent.isOnGround) {
+      if (parent.verticalVelocity < 0) {
+        if (_hasDoubleJumped) {
+          parent.state = HeroState.doubleJump;
+        } else {
+          parent.state = HeroState.jump;
+        }
+      } else {
+        parent.state = HeroState.fall;
+      }
+    } else {
+      if (_horizontalMovement != 0) {
+        parent.state = HeroState.run;
+      } else {
+        parent.state = HeroState.idle;
+      }
+    }
+
+    parent.isOnGround = false;
+    parent.position.x += _horizontalMovement * speed * dt;
+    parent.previousY = parent.position.y;
+
+    if (_isJumping) {
+      parent.verticalVelocity = -jumpForce;
+      _isJumping = false;
+    }
+
+    parent.verticalVelocity += gravity * dt;
+    parent.position.y += parent.verticalVelocity * dt;
+
+    final groundLevel = game.size.y - 50;
+    if (parent.position.y + parent.size.y * (1 - parent.anchor.y) >=
+        groundLevel) {
+      parent.position.y = groundLevel - parent.size.y * (1 - parent.anchor.y);
+      parent.verticalVelocity = 0;
+      parent.isOnGround = true;
+      _hasDoubleJumped = false;
+    }
+
     if (_horizontalMovement > 0 && parent.isFlippedHorizontally) {
       parent.flipHorizontally();
     } else if (_horizontalMovement < 0 && !parent.isFlippedHorizontally) {
