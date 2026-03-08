@@ -2,12 +2,13 @@ name: big_brother
 description: A simple Flame game.
 version: 0.1.0
 
-publish_to: 'none'
+publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  collection: ^1.19.1
   flame: ^1.36.0
   flame_behaviors: ^1.3.4
   flame_tiled: ^3.1.0
@@ -23,3 +24,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: false
+  assets:
+    - assets/images/
+    - assets/images/bg/
+    - assets/images/items/
+    - assets/images/tiles/
+    - assets/images/hero/
