@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show Rect;
 
 import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/one_way_platform_collision_behavior.dart';
@@ -29,6 +30,10 @@ class HeroEntity extends PositionedEntity {
   double verticalVelocity = 0;
   bool isOnGround = false;
   double previousY = 0;
+
+  /// Set by the parent level after the hero is added.
+  /// Used by movement behavior to clamp the player within map bounds.
+  Rect? mapBounds;
 
   late final SpriteAnimationGroupComponent<HeroState> _animationComponent;
 

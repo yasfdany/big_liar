@@ -81,6 +81,16 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     parent.position.x += _currentMovement * speed * dt;
     parent.previousY = parent.position.y;
 
+    // Clamp player within level horizontal bounds.
+    final bounds = parent.mapBounds;
+    if (bounds != null) {
+      final halfW = parent.size.x * parent.anchor.x;
+      parent.position.x = parent.position.x.clamp(
+        bounds.left + halfW,
+        bounds.right - halfW,
+      );
+    }
+
     if (_isJumping) {
       parent.verticalVelocity = -jumpForce;
       _isJumping = false;

@@ -1,3 +1,5 @@
+import 'dart:ui' show Rect;
+
 import 'package:big_brother/entities/hero/hero_entity.dart';
 import 'package:big_brother/entities/item/apple.dart';
 import 'package:big_brother/entities/item/bananas.dart';
@@ -99,7 +101,15 @@ class LevelEntity extends PositionedEntity {
         .firstWhereOrNull((e) => e.name == 'start')
         ?.position;
     if (startPositions != null) {
-      add(HeroEntity(position: startPositions));
+      final hero = HeroEntity(position: startPositions);
+      const tileSize = 16.0;
+      hero.mapBounds = const Rect.fromLTRB(
+        1 * tileSize,
+        1 * tileSize,
+        32 * tileSize,
+        17 * tileSize,
+      );
+      add(hero);
     }
   }
 }
