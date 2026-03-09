@@ -9,13 +9,16 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     this.speed = 200,
     this.jumpForce = 300,
     this.gravity = 1000,
+    this.acceleration = 10,
   });
 
   final double speed;
   final double jumpForce;
   final double gravity;
+  final double acceleration;
 
-  double _horizontalMovement = 0;
+  double _targetMovement = 0;
+  double _currentMovement = 0;
   bool _isJumping = false;
   bool _hasDoubleJumped = false;
 
@@ -23,12 +26,12 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
-      _horizontalMovement = -1;
+      _targetMovement = -1;
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
-      _horizontalMovement = 1;
+      _targetMovement = 1;
     } else {
-      _horizontalMovement = 0;
+      _targetMovement = 0;
     }
 
     if (keysPressed.contains(LogicalKeyboardKey.space)) {
@@ -45,6 +48,13 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
   @override
   void update(double dt) {
+    _currentMovement +=
+        (_targetMovement - _currentMovement) * acceleration * dt;
+
+    if (_currentMovement.abs() < 0.01) {
+      _currentMovement = 0;
+    }
+
     if (parent.isOnGround) {
       _hasDoubleJumped = false;
     }
@@ -60,7 +70,7 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
         parent.state = HeroState.fall;
       }
     } else {
-      if (_horizontalMovement != 0) {
+      if (_currentMovement != 0) {
         parent.state = HeroState.run;
       } else {
         parent.state = HeroState.idle;
@@ -68,7 +78,7 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     }
 
     parent.isOnGround = false;
-    parent.position.x += _horizontalMovement * speed * dt;
+    parent.position.x += _currentMovement * speed * dt;
     parent.previousY = parent.position.y;
 
     if (_isJumping) {
@@ -88,9 +98,9 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       _hasDoubleJumped = false;
     }
 
-    if (_horizontalMovement > 0 && parent.isFlippedHorizontally) {
+    if (_targetMovement > 0 && parent.isFlippedHorizontally) {
       parent.flipHorizontally();
-    } else if (_horizontalMovement < 0 && !parent.isFlippedHorizontally) {
+    } else if (_targetMovement < 0 && !parent.isFlippedHorizontally) {
       parent.flipHorizontally();
     }
   }

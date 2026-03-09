@@ -5,72 +5,15 @@
   <tile id="6" type="platform"/>
   <tile id="7" type="platform"/>
   <tile id="8" type="platform"/>
-  <tile id="12" type="solid"/>
-  <tile id="13" type="solid"/>
-  <tile id="14" type="solid"/>
-  <tile id="15" type="solid"/>
-  <tile id="34" type="solid"/>
-  <tile id="35" type="solid"/>
-  <tile id="36" type="solid"/>
-  <tile id="37" type="solid"/>
   <tile id="39" type="platform"/>
   <tile id="40" type="platform"/>
   <tile id="41" type="platform"/>
-  <tile id="57" type="solid"/>
-  <tile id="58" type="solid"/>
-  <tile id="59" type="solid"/>
   <tile id="94" type="platform"/>
   <tile id="95" type="platform"/>
   <tile id="96" type="platform"/>
-  <tile id="100" type="solid"/>
-  <tile id="101" type="solid"/>
-  <tile id="102" type="solid"/>
-  <tile id="103" type="solid"/>
-  <tile id="105" type="solid"/>
-  <tile id="106" type="solid"/>
-  <tile id="107" type="solid"/>
-  <tile id="108" type="solid"/>
-  <tile id="109" type="solid"/>
-  <tile id="122" type="solid"/>
-  <tile id="123" type="solid"/>
-  <tile id="124" type="solid"/>
-  <tile id="125" type="solid"/>
-  <tile id="127" type="solid"/>
-  <tile id="128" type="solid"/>
-  <tile id="129" type="solid"/>
-  <tile id="130" type="solid"/>
-  <tile id="131" type="solid"/>
-  <tile id="145" type="solid"/>
-  <tile id="146" type="solid"/>
-  <tile id="147" type="solid"/>
-  <tile id="149" type="solid"/>
-  <tile id="150" type="solid"/>
-  <tile id="151" type="solid"/>
   <tile id="182" type="platform"/>
   <tile id="183" type="platform"/>
   <tile id="184" type="platform"/>
-  <tile id="188" type="solid"/>
-  <tile id="189" type="solid"/>
-  <tile id="190" type="solid"/>
-  <tile id="191" type="solid"/>
-  <tile id="193" type="solid"/>
-  <tile id="194" type="solid"/>
-  <tile id="195" type="solid"/>
-  <tile id="196" type="solid"/>
-  <tile id="210" type="solid"/>
-  <tile id="211" type="solid"/>
-  <tile id="212" type="solid"/>
-  <tile id="213" type="solid"/>
-  <tile id="215" type="solid"/>
-  <tile id="216" type="solid"/>
-  <tile id="217" type="solid"/>
-  <tile id="218" type="solid"/>
-  <tile id="233" type="solid"/>
-  <tile id="234" type="solid"/>
-  <tile id="235" type="solid"/>
-  <tile id="238" type="solid"/>
-  <tile id="239" type="solid"/>
-  <tile id="240" type="solid"/>
  </tileset>
  <layer id="2" name="ground" width="35" height="20">
   <data encoding="csv">

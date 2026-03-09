@@ -13,29 +13,34 @@ import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flame_tiled_utils/flame_tiled_utils.dart';
 
 class LevelEntity extends PositionedEntity {
-  LevelEntity() : super(anchor: Anchor.center);
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Load the Tiled map using the custom prefix
+    final imageCompiler = ImageBatchCompiler();
     final tiledMap = await TiledComponent.load(
-      'level1.tmx',
+      'level_1.tmx',
       Vector2.all(16), // tile size in the map
       prefix: 'assets/images/tiles/',
       images: Images(
         prefix: 'assets/images/tiles/',
       )..load('tile.png'),
     );
+    position = -tiledMap.size / 2;
 
     final itemGroups = tiledMap.tileMap.getLayer<ObjectGroup>(
       'items',
     );
     final positionGroups = tiledMap.tileMap.getLayer<ObjectGroup>(
       'position',
+    );
+
+    final maps = imageCompiler.compileMapLayer(
+      tileMap: tiledMap.tileMap,
+      layerNames: ['items', 'ground', 'position', 'frame'],
     );
 
     for (final item in itemGroups?.objects ?? <TiledObject>[]) {
@@ -61,13 +66,8 @@ class LevelEntity extends PositionedEntity {
       }
     }
 
-    // Update the size of the entity to match the map so the center anchor works
-    size = tiledMap.size;
+    await add(maps);
 
-    // Add the tiled map as a child to visually represent this entity
-    await add(tiledMap);
-
-    // Extract one-way platforms from the ground layer
     final groundLayer = tiledMap.tileMap.getLayer<TileLayer>('ground');
     if (groundLayer != null) {
       final tileData = groundLayer.tileData;
@@ -77,8 +77,7 @@ class LevelEntity extends PositionedEntity {
             final tile = tileData[y][x];
             // Get the tile object to check its class/type
             final tileObj = tiledMap.tileMap.map.tileByGid(tile.tile);
-            if (tileObj != null &&
-                (tileObj.class_ == 'platform' || tileObj.type == 'platform')) {
+            if (tileObj != null && (tileObj.class_ == 'platform')) {
               final platformPosition = Vector2(
                 x * tiledMap.tileMap.destTileSize.x,
                 y * tiledMap.tileMap.destTileSize.y,
