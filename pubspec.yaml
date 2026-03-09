@@ -31,4 +31,5 @@ flutter:
     - assets/images/items/
     - assets/images/tiles/
     - assets/images/hero/
+    - assets/images/ui/
     - assets/images/objects/

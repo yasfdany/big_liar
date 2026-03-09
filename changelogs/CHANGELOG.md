@@ -4,6 +4,11 @@
 
 ### Added
 
+- **UI Buttons** (`lib/entities/ui/input_button.dart`, `lib/entities/ui/input_button_icon.dart`): Created a reusable `InputButton` entity that uses a `SpriteGroupComponent` to display various controller and keyboard icons from `assets/images/ui/buttons.png`.
+  - Supports Xbox, PlayStation, Keyboard, and Mouse icons (34 distinct states).
+  - Added optional **progress timer** with a visual rectangle bar below the icon.
+  - Uses 20x16 sprite grid.
+
 - **Item collected animation** (`collected_all_effect.dart`, `collectible_behavior.dart`): A 6-frame one-shot animation from `assets/images/items/collected.png` now plays at the item's position every time any item is collected by the hero, then auto-removes.
   - New `CollectedAllEffect` — `SpriteAnimationComponent` with `removeOnFinish: true`, anchored `center` at the item's center position.
   - `CollectibleBehavior` spawns the effect into `parent.parent` (LevelEntity) at the item's center before calling `removeFromParent()`.

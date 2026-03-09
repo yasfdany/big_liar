@@ -1,5 +1,7 @@
 import 'package:big_brother/entities/background/background_entity.dart';
 import 'package:big_brother/entities/level/level_entity.dart';
+import 'package:big_brother/entities/ui/input_button.dart';
+import 'package:big_brother/entities/ui/input_button_icon.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ class BigBrotherGame extends FlameGame
 
     world.add(BackgroundEntity());
     world.add(LevelEntity());
+    world.add(InputButton(icon: InputButtonIcon.keyE, duration: 3));
   }
 
   @override
