@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Flag entity** (`entities/object/flag/flag.dart`, `flag_touch_behavior.dart`): Created a finish-line flag with `SpriteAnimationGroupComponent<FlagState>` supporting three states:
+  - `pole` → static 1-frame sprite, shown before the hero arrives.
+  - `raise` → 26-frame one-shot animation triggered when the hero touches the flag (`FlagTouchBehavior`). Auto-transitions to `idle` via `onComplete`.
+  - `idle` → 10-frame looping waving animation shown after raising.
+  - The flag can be placed in Tiled maps using the object name `flag` in the `items` layer. Sprite textures use 64×64 frames from `assets/images/objects/`.
+
 - **Map boundary clamping** (`hero.dart`, `keyboard_movement_behavior.dart`, `level.dart`): Hero is now prevented from walking beyond the horizontal edges of the map. Changed `mapBounds` on `HeroEntity` from `Vector2?` to `Rect?` to support a left-edge offset. Level sets static bounds based on a **35×20 tile map at 16px**, with a 1-tile border giving a **33×18 playable area starting at tile (1,1)** — pixels `(16, 16) → (544, 304)`. Clamp in movement behavior now uses `bounds.left + halfWidth` and `bounds.right - halfWidth`.
 
 ### Changed

@@ -10,6 +10,7 @@ import 'package:big_brother/entities/item/orange.dart';
 import 'package:big_brother/entities/item/pineapple.dart';
 import 'package:big_brother/entities/item/strawberry.dart';
 import 'package:big_brother/entities/level/one_way_platform.dart';
+import 'package:big_brother/entities/object/flag/flag.dart';
 import 'package:collection/collection.dart';
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
@@ -63,12 +64,14 @@ class LevelEntity extends PositionedEntity {
           add(Pineapple()..position = item.position);
         case 'strawberry':
           add(Strawberry()..position = item.position);
+        case 'flag':
+          add(FlagEntity()..position = item.position);
         default:
           break;
       }
     }
 
-    await add(maps);
+    add(maps);
 
     final groundLayer = tiledMap.tileMap.getLayer<TileLayer>('ground');
     if (groundLayer != null) {
@@ -100,6 +103,14 @@ class LevelEntity extends PositionedEntity {
     final startPositions = (positionGroups?.objects ?? [])
         .firstWhereOrNull((e) => e.name == 'start')
         ?.position;
+    final endPositions = (positionGroups?.objects ?? [])
+        .firstWhereOrNull((e) => e.name == 'end')
+        ?.position;
+
+    if (endPositions != null) {
+      add(FlagEntity(position: endPositions));
+    }
+
     if (startPositions != null) {
       final hero = HeroEntity(position: startPositions);
       const tileSize = 16.0;
