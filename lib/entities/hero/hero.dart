@@ -3,12 +3,13 @@ import 'dart:ui' show Rect;
 
 import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/one_way_platform_collision_behavior.dart';
+import 'package:big_brother/entities/hero/behavior/particle_effect_behavior.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-enum HeroState { idle, run, jump, fall, doubleJump, hit, wallJump }
+enum HeroState { idle, run, jump, fall, doubleJump, hit, wallJump, dash }
 
 class HeroEntity extends PositionedEntity {
   HeroEntity({
@@ -24,6 +25,7 @@ class HeroEntity extends PositionedEntity {
             ),
             OneWayPlatformCollisionBehavior(),
             KeyboardMovementBehavior(),
+            ParticleEffectBehavior(),
           ],
         );
 
@@ -39,6 +41,10 @@ class HeroEntity extends PositionedEntity {
 
   HeroState get state => _animationComponent.current ?? HeroState.idle;
   set state(HeroState value) => _animationComponent.current = value;
+
+  /// Returns the sprite being rendered on the current animation frame.
+  /// Used by ParticleEffectBehavior to clone the hero ghost for the dash trail.
+  Sprite? get currentSprite => _animationComponent.animationTicker?.getSprite();
 
   @override
   bool get isFlippedHorizontally => _animationComponent.isFlippedHorizontally;
@@ -70,6 +76,14 @@ class HeroEntity extends PositionedEntity {
         SpriteAnimationData.sequenced(
           amount: 12,
           stepTime: 0.05,
+          textureSize: Vector2.all(32),
+        ),
+      ),
+      HeroState.dash: SpriteAnimation.fromFrameData(
+        runSpriteSheet,
+        SpriteAnimationData.sequenced(
+          amount: 12,
+          stepTime: 0.025,
           textureSize: Vector2.all(32),
         ),
       ),

@@ -17,10 +17,18 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
   final double gravity;
   final double acceleration;
 
+  double currentMovement = 0;
   double _targetMovement = 0;
-  double _currentMovement = 0;
   bool _isJumping = false;
   bool _hasDoubleJumped = false;
+
+  // Dash state
+  bool _isDashing = false;
+  double _dashTimer = 0;
+  double _dashCooldownTimer = 0;
+  static const double _dashDuration = 0.15;
+  static const double _dashCooldown = 0.5;
+  static const double _dashMultiplier = 3.5;
 
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
@@ -34,7 +42,8 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       _targetMovement = 0;
     }
 
-    if (keysPressed.contains(LogicalKeyboardKey.space)) {
+    if (keysPressed.contains(LogicalKeyboardKey.keyW) ||
+        keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
       if (parent.isOnGround) {
         _isJumping = true;
       } else if (!_hasDoubleJumped) {
@@ -43,23 +52,42 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       }
     }
 
+    if (event is KeyDownEvent &&
+        keysPressed.contains(LogicalKeyboardKey.space)) {
+      if (_dashCooldownTimer <= 0 && !_isDashing) {
+        _isDashing = true;
+        _dashTimer = _dashDuration;
+        _dashCooldownTimer = _dashCooldown;
+      }
+    }
+
     return super.onKeyEvent(event, keysPressed);
   }
 
   @override
   void update(double dt) {
-    _currentMovement +=
-        (_targetMovement - _currentMovement) * acceleration * dt;
+    // Tick dash timers
+    if (_dashCooldownTimer > 0) _dashCooldownTimer -= dt;
+    if (_isDashing) {
+      _dashTimer -= dt;
+      if (_dashTimer <= 0) {
+        _isDashing = false;
+      }
+    }
 
-    if (_currentMovement.abs() < 0.01) {
-      _currentMovement = 0;
+    currentMovement += (_targetMovement - currentMovement) * acceleration * dt;
+
+    if (currentMovement.abs() < 0.01) {
+      currentMovement = 0;
     }
 
     if (parent.isOnGround) {
       _hasDoubleJumped = false;
     }
 
-    if (!parent.isOnGround) {
+    if (_isDashing) {
+      parent.state = HeroState.dash;
+    } else if (!parent.isOnGround) {
       if (parent.verticalVelocity < 0) {
         if (_hasDoubleJumped) {
           parent.state = HeroState.doubleJump;
@@ -70,7 +98,7 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
         parent.state = HeroState.fall;
       }
     } else {
-      if (_currentMovement != 0) {
+      if (currentMovement != 0) {
         parent.state = HeroState.run;
       } else {
         parent.state = HeroState.idle;
@@ -78,7 +106,8 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     }
 
     parent.isOnGround = false;
-    parent.position.x += _currentMovement * speed * dt;
+    final effectiveSpeed = _isDashing ? speed * _dashMultiplier : speed;
+    parent.position.x += currentMovement * effectiveSpeed * dt;
     parent.previousY = parent.position.y;
 
     // Clamp player within level horizontal bounds.

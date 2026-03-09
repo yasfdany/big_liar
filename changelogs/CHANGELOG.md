@@ -4,6 +4,28 @@
 
 ### Added
 
+- **Particle effects** (`particle_effect_behavior.dart`, `hero.dart`): Reworked `ParticleEffectBehavior` with:
+  - **Run dust**: Brownish/tan `ComputedParticle` circles emitted from hero's feet every 80ms while in `run` state, fading and shrinking over 0.25–0.45s.
+  - **Dash burst**: On dash activation — radial cyan/purple spark ring (18 particles with blur glow), direction streak blobs (6 particles trailing opposite to facing), and a flat ground shockwave ring when on ground.
+  - **Sprite ghost trail**: Fading copies of the actual hero sprite rendered every 40ms while dashing with a blue/violet `ColorFilter` tint, correctly mirrored when hero is flipped.
+  - Added `currentSprite` getter to `HeroEntity` (via `animationTicker?.getSprite()`) so the behavior can snapshot the live animation frame.
+
+### Fixed
+
+- **Particle spawn coordinates** (`particle_effect_behavior.dart`): Particles are now spawned into `parent.parent` (LevelEntity) at `parent.position` coordinates rather than `game.world` with `absolutePosition`, eliminating all world-space / camera-zoom conversion issues.
+- **Dust not appearing** (`particle_effect_behavior.dart`): Dust was always suppressed because `KeyboardMovementBehavior` sets `parent.isOnGround = false` _after_ setting `state = HeroState.run`, so by the time `ParticleEffectBehavior.update()` ran, `isOnGround` was always `false`. Fixed by checking only `state == HeroState.run`.
+
+- **Dash mechanic** (`keyboard_movement_behavior.dart`, `hero.dart`): Hero can now dash by pressing `Space`. Dash multiplies horizontal speed by `3.5×` for `0.15s`, with a `0.5s` cooldown before it can be used again. Dash can only be triggered via `KeyDownEvent` (no hold-to-spam). A new `HeroState.dash` was added to the enum, playing the `run` sprite sheet at double speed (`stepTime: 0.025`) as a visual approximation since no dedicated dash sprite exists.
+
+### Changed
+
+- **Jump keybinding** (`keyboard_movement_behavior.dart`): Jump is now triggered by `W` or `Up Arrow` instead of `Space`. Double-jump logic remains unchanged.
+- **Spacebar** reassigned from jump to dash (see above).
+
+---
+
+### Added
+
 - **Flag entity** (`entities/object/flag/flag.dart`, `flag_touch_behavior.dart`): Created a finish-line flag with `SpriteAnimationGroupComponent<FlagState>` supporting three states:
   - `pole` → static 1-frame sprite, shown before the hero arrives.
   - `raise` → 26-frame one-shot animation triggered when the hero touches the flag (`FlagTouchBehavior`). Auto-transitions to `idle` via `onComplete`.
