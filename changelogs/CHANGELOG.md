@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Item collected animation** (`collected_all_effect.dart`, `collectible_behavior.dart`): A 6-frame one-shot animation from `assets/images/items/collected.png` now plays at the item's position every time any item is collected by the hero, then auto-removes.
+  - New `CollectedAllEffect` — `SpriteAnimationComponent` with `removeOnFinish: true`, anchored `center` at the item's center position.
+  - `CollectibleBehavior` spawns the effect into `parent.parent` (LevelEntity) at the item's center before calling `removeFromParent()`.
+
 - **Particle effects** (`particle_effect_behavior.dart`, `hero.dart`): Reworked `ParticleEffectBehavior` with:
   - **Run dust**: Brownish/tan `ComputedParticle` circles emitted from hero's feet every 80ms while in `run` state, fading and shrinking over 0.25–0.45s.
   - **Dash burst**: On dash activation — radial cyan/purple spark ring (18 particles with blur glow), direction streak blobs (6 particles trailing opposite to facing), and a flat ground shockwave ring when on ground.
