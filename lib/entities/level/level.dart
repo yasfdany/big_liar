@@ -11,6 +11,9 @@ import 'package:big_brother/entities/item/pineapple.dart';
 import 'package:big_brother/entities/item/strawberry.dart';
 import 'package:big_brother/entities/level/one_way_platform.dart';
 import 'package:big_brother/entities/object/flag/flag.dart';
+import 'package:big_brother/entities/ui/fruit_counter_hud.dart';
+import 'package:big_brother/entities/ui/suspicion_hud.dart';
+import 'package:big_brother/game/game_state.dart';
 import 'package:collection/collection.dart';
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
@@ -18,10 +21,13 @@ import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flame_tiled_utils/flame_tiled_utils.dart';
 
-class LevelEntity extends PositionedEntity {
+class LevelEntity extends PositionedEntity with HasGameReference {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    // Reset game state for fresh level start.
+    GameState.instance.reset();
 
     final imageCompiler = ImageBatchCompiler();
     final tiledMap = await TiledComponent.load(
@@ -33,6 +39,7 @@ class LevelEntity extends PositionedEntity {
       )..load('tile.png'),
     );
     position = -tiledMap.size / 2;
+    size = tiledMap.size;
 
     final itemGroups = tiledMap.tileMap.getLayer<ObjectGroup>(
       'items',
@@ -122,5 +129,9 @@ class LevelEntity extends PositionedEntity {
       );
       add(hero);
     }
+
+    // ── HUD components (world-space, track camera each frame) ────────────────
+    add(FruitCounterHud());
+    add(SuspicionHud(position: Vector2(size.x - 88, -20)));
   }
 }

@@ -4,6 +4,7 @@ import 'dart:ui' show Rect;
 import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/one_way_platform_collision_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/particle_effect_behavior.dart';
+import 'package:big_brother/entities/hero/behavior/random_input_behavior.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -26,6 +27,7 @@ class HeroEntity extends PositionedEntity {
             OneWayPlatformCollisionBehavior(),
             KeyboardMovementBehavior(),
             ParticleEffectBehavior(),
+            RandomInputBehavior(),
           ],
         );
 

@@ -1,6 +1,41 @@
 # Changelog
 
-## [Unreleased] - 2026-03-10
+## [Unreleased] - 2026-03-11
+
+### Added
+
+- **Dialogue system** (`lib/entities/ui/dialogue_box.dart`): Added a bottom-of-screen HUD dialogue panel triggered whenever the player ignores a button prompt (timer expires without a correct key press).
+  - Shows the hero's face (idle sprite, frame 0) as a character avatar on the left side of the panel, surrounded by a decorative ring.
+  - Text is revealed one character at a time using a **typewriter effect** (~0.04 s between characters).
+  - Randomly selects from 6 complaint phrases every trigger: *"Hey… my button didn't do anything."*, *"Are you sure I'm playing?"*, *"Why is nothing happening when I press?"*, *"You didn't use my move…"*, *"Maybe my controller is broken?"*, *"Did you see me press it?"*
+  - Panel **slides up from screen bottom** with a fade-in on entry, and auto-dismisses with a slide-down fade-out 2.5 s after text completes.
+  - Rendered in `game.camera.viewport` (HUD / screen-space) — unaffected by world camera pan or zoom.
+  - If a new dialogue fires before the old one finishes, the old box is replaced immediately (no stacking).
+  - Panel background uses a **`NineTileBoxComponent`** with `assets/images/ui/dialogue_nine_box.png` (48×48, tileSize=16) — pixel-perfect corners that stretch to any panel size.
+- **Dialogue trigger** (`lib/entities/ui/input_button.dart`): `resetButton()` now calls `DialogueBox.showRandom(game.camera.viewport)` on the failure path (`collect == false`), keeping the success/collect path silent.
+- **Fruit Counter & Suspicion Level HUD** (`lib/game/game_state.dart`, `lib/entities/ui/fruit_counter_hud.dart`, `lib/entities/ui/suspicion_hud.dart`):
+  - Created a `GameState` singleton to track global stats across levels.
+  - **Fruit Counter**: Top-left icon + text that pops when a fruit is collected.
+  - **Suspicion Bar**: Top-right fill bar that increases by +20% when a button prompt is failed.
+  - **Passive Drain**: Suspicion level slowly decreases over time (3% per second) to reward active play.
+  - **Visual Feedback**: The suspicion bar color shifts green → yellow → red and pulses at ≥80% suspicion.
+  - Both HUDs are rendered in world-space as children of `LevelEntity` but track the camera viewfinder each frame to stay pinned to screen corners.
+
+---
+
+
+### Added
+
+- **Random input button prompt** (`random_input_behavior.dart`): Implemented as a dedicated `RandomInputBehavior` (a `Behavior<HeroEntity>`) following the `flame_behaviors` separation-of-concerns pattern.
+  - Registered in `HeroEntity`'s `behaviors` list alongside existing behaviors.
+  - Spawns an `InputButton` prompt centered above the hero's head every **5–10 seconds** (re-randomized each interval).
+  - Randomly selects from `[InputButtonIcon.xboxA, InputButtonIcon.xboxB]` (jump and dash hints).
+  - Each prompt has a **3-second** progress bar — auto-dismisses if ignored.
+  - Duplicate guard: skips spawning if an identical icon prompt is already visible on the hero.
+  - `KeyboardMovementBehavior` already handles dismissing the matching prompt early when the correct key is pressed (`W`/Up for `xboxA`, `Space` for `xboxB`).
+- **Screen shake on failure** (`lib/entities/ui/input_button.dart`): Added a horizontal and vertical camera jitter effect that triggers when the player fails to respond to a button prompt before the timer expires. Uses `MoveEffect.by` on the camera's viewfinder.
+
+---
 
 ### Added
 

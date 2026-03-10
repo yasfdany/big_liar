@@ -1,5 +1,6 @@
 import 'package:big_brother/entities/hero/hero_entity.dart';
 import 'package:big_brother/entities/item/collected_all_effect.dart';
+import 'package:big_brother/game/game_state.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
@@ -11,6 +12,9 @@ class CollectibleBehavior
     HeroEntity other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
+
+    // Increment the global fruit counter.
+    GameState.instance.collectFruit();
 
     // Spawn the collected animation at the item's position before removing it.
     final level = parent.parent;

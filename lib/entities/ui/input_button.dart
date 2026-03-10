@@ -1,22 +1,29 @@
 import 'dart:async';
 
+import 'package:big_brother/entities/hero/hero.dart';
+import 'package:big_brother/entities/item/collected_all_effect.dart';
+import 'package:big_brother/entities/ui/dialogue_box.dart';
 import 'package:big_brother/entities/ui/input_button_icon.dart';
+import 'package:big_brother/game/big_brother_game.dart';
+import 'package:big_brother/game/game_state.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flutter/material.dart';
 
-class InputButton extends PositionedEntity {
+class InputButton extends PositionedEntity with HasGameReference {
   InputButton({
     required this.icon,
     this.duration,
     super.position,
     super.anchor = Anchor.center,
+    this.onFinish,
   }) : super(
           size: Vector2(20, duration != null ? 20 : 16),
         );
 
+  final VoidCallback? onFinish;
   final InputButtonIcon icon;
   final double? duration;
 
@@ -70,15 +77,58 @@ class InputButton extends PositionedEntity {
       _progressBar?.size.x = 20 * (1 - _timer!.progress);
 
       if ((_timer?.finished ?? false) && !_animate) {
-        _animate = true;
-        add(
-          ScaleEffect.to(
-            Vector2.zero(),
-            EffectController(
-              duration: 0.3,
-              curve: Curves.elasticIn,
-              onMax: removeFromParent,
-            ),
+        resetButton();
+      }
+    }
+  }
+
+  void resetButton({bool collect = false}) {
+    onFinish?.call();
+    _animate = true;
+
+    if (!collect) {
+      // Increase suspicion level.
+      GameState.instance.addSuspicion();
+
+      // Screen shake
+      game.camera.viewfinder.add(
+        MoveEffect.by(
+          Vector2(2, 2),
+          EffectController(
+            duration: 0.05,
+            repeatCount: 2,
+            alternate: true,
+          ),
+        ),
+      );
+
+      // Show the character complaint dialogue
+      DialogueBox.showRandom(game.camera.viewport);
+    }
+
+    add(
+      ScaleEffect.to(
+        Vector2.zero(),
+        EffectController(
+          duration: 0.3,
+          curve: Curves.elasticIn,
+          onMax: () {
+            _collectedAnimation(collect);
+            removeFromParent();
+          },
+        ),
+      ),
+    );
+  }
+
+  void _collectedAnimation(bool collect) {
+    if (collect) {
+      final level = (game as BigBrotherGame).level;
+      final hero = level.children.whereType<HeroEntity>().firstOrNull;
+      if (hero != null) {
+        level.add(
+          CollectedAllEffect(
+            position: hero.position - Vector2(0, hero.size.y - 6),
           ),
         );
       }

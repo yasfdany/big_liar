@@ -18,7 +18,6 @@ class FlagEntity extends PositionedEntity {
   FlagEntity({super.position})
       : super(
           size: Vector2.all(64),
-          anchor: Anchor.center,
           behaviors: [
             PropagatingCollisionBehavior(
               RectangleHitbox(),

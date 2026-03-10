@@ -1,4 +1,6 @@
 import 'package:big_brother/entities/hero/hero.dart';
+import 'package:big_brother/entities/ui/input_button.dart';
+import 'package:big_brother/entities/ui/input_button_icon.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flutter/services.dart';
@@ -44,6 +46,15 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
     if (keysPressed.contains(LogicalKeyboardKey.keyW) ||
         keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+      if (parent.isOnGround || !_hasDoubleJumped) {
+        final inputButton = parent.children.whereType<InputButton>();
+        for (final button in inputButton) {
+          if (button.icon == InputButtonIcon.xboxA) {
+            button.resetButton(collect: true);
+          }
+        }
+      }
+
       if (parent.isOnGround) {
         _isJumping = true;
       } else if (!_hasDoubleJumped) {
@@ -55,6 +66,13 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     if (event is KeyDownEvent &&
         keysPressed.contains(LogicalKeyboardKey.space)) {
       if (_dashCooldownTimer <= 0 && !_isDashing) {
+        final inputButton = parent.children.whereType<InputButton>();
+        for (final button in inputButton) {
+          if (button.icon == InputButtonIcon.xboxB) {
+            button.resetButton(collect: true);
+          }
+        }
+
         _isDashing = true;
         _dashTimer = _dashDuration;
         _dashCooldownTimer = _dashCooldown;
