@@ -1,5 +1,6 @@
 import 'dart:ui' show Rect;
 
+import 'package:big_brother/entities/background/background.dart';
 import 'package:big_brother/entities/hero/hero_entity.dart';
 import 'package:big_brother/entities/item/apple.dart';
 import 'package:big_brother/entities/item/bananas.dart';
@@ -10,6 +11,7 @@ import 'package:big_brother/entities/item/orange.dart';
 import 'package:big_brother/entities/item/pineapple.dart';
 import 'package:big_brother/entities/item/strawberry.dart';
 import 'package:big_brother/entities/level/one_way_platform.dart';
+import 'package:big_brother/entities/level/solid_platform.dart';
 import 'package:big_brother/entities/object/flag/flag.dart';
 import 'package:big_brother/entities/ui/item_counter_hud.dart';
 import 'package:big_brother/entities/ui/suspicion_hud.dart';
@@ -23,6 +25,7 @@ import 'package:flame_tiled_utils/flame_tiled_utils.dart';
 
 class LevelEntity extends PositionedEntity with HasGameReference {
   int totalItems = 0;
+  late String bgImage;
 
   @override
   Future<void> onLoad() async {
@@ -48,6 +51,13 @@ class LevelEntity extends PositionedEntity with HasGameReference {
     final positionGroups = tiledMap.tileMap.getLayer<ObjectGroup>(
       'position',
     );
+    final frameGroups = tiledMap.tileMap.getLayer<TileLayer>(
+      'frame',
+    );
+
+    bgImage =
+        frameGroups?.properties.byName['background']?.value.toString() ?? '';
+    game.world.add(BackgroundEntity(bgImage: bgImage, priority: -1));
 
     final maps = imageCompiler.compileMapLayer(
       tileMap: tiledMap.tileMap,
@@ -110,6 +120,18 @@ class LevelEntity extends PositionedEntity with HasGameReference {
               add(
                 OneWayPlatform(
                   position: platformPosition,
+                  size: tiledMap.tileMap.destTileSize,
+                ),
+              );
+            } else if (tileObj != null && (tileObj.class_ == 'solid')) {
+              final solidPosition = Vector2(
+                x * tiledMap.tileMap.destTileSize.x,
+                y * tiledMap.tileMap.destTileSize.y,
+              );
+
+              add(
+                SolidPlatform(
+                  position: solidPosition,
                   size: tiledMap.tileMap.destTileSize,
                 ),
               );

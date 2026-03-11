@@ -5,6 +5,7 @@ import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.da
 import 'package:big_brother/entities/hero/behavior/one_way_platform_collision_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/particle_effect_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/random_input_behavior.dart';
+import 'package:big_brother/entities/hero/behavior/solid_platform_collision_behavior.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -25,6 +26,7 @@ class HeroEntity extends PositionedEntity {
               ),
             ),
             OneWayPlatformCollisionBehavior(),
+            SolidPlatformCollisionBehavior(),
             KeyboardMovementBehavior(),
             ParticleEffectBehavior(),
             RandomInputBehavior(),
@@ -32,8 +34,10 @@ class HeroEntity extends PositionedEntity {
         );
 
   double verticalVelocity = 0;
+  double horizontalVelocity = 0;
   bool isOnGround = false;
   double previousY = 0;
+  double previousX = 0;
 
   /// Set by the parent level after the hero is added.
   /// Used by movement behavior to clamp the player within map bounds.

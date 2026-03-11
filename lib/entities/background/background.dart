@@ -4,12 +4,15 @@ import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flutter/widgets.dart';
 
 class BackgroundEntity extends Entity {
+  final String bgImage;
+  BackgroundEntity({this.bgImage = 'gray', super.priority});
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
     final parallaxComponent = await ParallaxComponent.load(
-      [ParallaxImageData('bg/gray.png')],
+      [ParallaxImageData('bg/$bgImage.png')],
       baseVelocity: Vector2(0, -20),
       size: Vector2(560, 318),
       repeat: ImageRepeat.repeat,

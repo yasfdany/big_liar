@@ -1,4 +1,3 @@
-import 'package:big_brother/entities/background/background_entity.dart';
 import 'package:big_brother/entities/level/level_entity.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
@@ -14,7 +13,6 @@ class BigBrotherGame extends FlameGame
     await super.onLoad();
     camera.viewfinder.zoom = 1.5;
 
-    world.add(BackgroundEntity());
     world.add(level);
   }
 

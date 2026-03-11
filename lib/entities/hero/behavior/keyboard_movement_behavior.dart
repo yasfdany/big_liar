@@ -1,4 +1,6 @@
+import 'package:big_brother/entities/hero/behavior/solid_platform_collision_behavior.dart';
 import 'package:big_brother/entities/hero/hero.dart';
+import 'package:big_brother/entities/level/solid_platform.dart';
 import 'package:big_brother/entities/ui/input_button.dart';
 import 'package:big_brother/entities/ui/input_button_icon.dart';
 import 'package:flame/components.dart';
@@ -85,7 +87,9 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
   @override
   void update(double dt) {
     // Tick dash timers
-    if (_dashCooldownTimer > 0) _dashCooldownTimer -= dt;
+    if (_dashCooldownTimer > 0) {
+      _dashCooldownTimer -= dt;
+    }
     if (_isDashing) {
       _dashTimer -= dt;
       if (_dashTimer <= 0) {
@@ -125,17 +129,24 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
     parent.isOnGround = false;
     final effectiveSpeed = _isDashing ? speed * _dashMultiplier : speed;
-    parent.position.x += currentMovement * effectiveSpeed * dt;
+
+    // Store previous positions for collision detection
+    parent.previousX = parent.position.x;
     parent.previousY = parent.position.y;
 
-    // Clamp player within level horizontal bounds.
-    final bounds = parent.mapBounds;
-    if (bounds != null) {
-      final halfW = parent.size.x * parent.anchor.x;
-      parent.position.x = parent.position.x.clamp(
-        bounds.left + halfW,
-        bounds.right - halfW,
-      );
+    // Set horizontal velocity for collision detection
+    parent.horizontalVelocity = currentMovement * effectiveSpeed;
+
+    // Calculate new horizontal position
+    final newX = parent.position.x + currentMovement * effectiveSpeed * dt;
+
+    // Only move horizontally if it won't hit a solid platform
+    final collisionBehavior =
+        parent.findBehavior<SolidPlatformCollisionBehavior>();
+    if (!collisionBehavior.wouldHitSolidPlatform(newX, parent.position.y)) {
+      parent.position.x = newX;
+    } else {
+      parent.horizontalVelocity = 0;
     }
 
     if (_isJumping) {
@@ -144,7 +155,54 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     }
 
     parent.verticalVelocity += gravity * dt;
-    parent.position.y += parent.verticalVelocity * dt;
+
+    // Calculate new vertical position
+    final newY = parent.position.y + parent.verticalVelocity * dt;
+
+    // Only move vertically if it won't hit a solid platform
+    if (collisionBehavior.wouldHitSolidPlatform(parent.position.x, newY) !=
+        true) {
+      parent.position.y = newY;
+    } else {
+      if (parent.verticalVelocity > 0) {
+        // Falling - find the closest platform we're actually hitting from above
+        final level = parent.parent;
+        final solidPlatforms =
+            level?.children.whereType<SolidPlatform>() ?? <SolidPlatform>[];
+
+        const hitboxOffsetX = SolidPlatformCollisionBehavior.hitboxOffsetX;
+        const hitboxWidth = SolidPlatformCollisionBehavior.hitboxWidth;
+        const hitboxHeight = SolidPlatformCollisionBehavior.hitboxHeight;
+
+        SolidPlatform? closestPlatform;
+        var closestDistance = double.infinity;
+
+        for (final platform in solidPlatforms) {
+          final heroLeft = parent.position.x + hitboxOffsetX;
+          final heroRight = parent.position.x + hitboxOffsetX + hitboxWidth;
+          final heroBottom = parent.position.y + hitboxHeight;
+
+          // Check if horizontally aligned and hero is above this platform
+          if (heroRight > platform.position.x &&
+              heroLeft < platform.position.x + platform.size.x &&
+              heroBottom <= platform.position.y + 2) {
+            // Small tolerance
+
+            final distance = platform.position.y - heroBottom;
+            if (distance >= 0 && distance < closestDistance) {
+              closestDistance = distance;
+              closestPlatform = platform;
+            }
+          }
+        }
+
+        if (closestPlatform != null) {
+          parent.position.y = closestPlatform.position.y - parent.size.y;
+          parent.isOnGround = true;
+        }
+      }
+      parent.verticalVelocity = 0;
+    }
 
     final groundLevel = game.size.y - 50;
     if (parent.position.y + parent.size.y * (1 - parent.anchor.y) >=
@@ -159,6 +217,30 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       parent.flipHorizontally();
     } else if (_targetMovement < 0 && !parent.isFlippedHorizontally) {
       parent.flipHorizontally();
+    }
+
+    // Clamp player within level bounds (final enforcement after all movement logic).
+    final bounds = parent.mapBounds;
+    if (bounds != null) {
+      final halfW = parent.size.x * parent.anchor.x;
+      final halfH = parent.size.y * parent.anchor.y;
+
+      parent.position.x = parent.position.x.clamp(
+        bounds.left + halfW,
+        bounds.right - halfW,
+      );
+
+      parent.position.y = parent.position.y.clamp(
+        bounds.top + halfH,
+        bounds.bottom - halfH,
+      );
+
+      // If player is at the bottom boundary, they should be considered on ground
+      if ((parent.position.y - (bounds.bottom - halfH)).abs() < 0.1) {
+        parent.isOnGround = true;
+        parent.verticalVelocity = 0;
+        _hasDoubleJumped = false;
+      }
     }
   }
 }
