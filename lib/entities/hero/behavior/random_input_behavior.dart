@@ -5,10 +5,11 @@ import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.da
 import 'package:big_brother/entities/hero/hero.dart';
 import 'package:big_brother/entities/ui/input_button.dart';
 import 'package:big_brother/entities/ui/input_button_icon.dart';
+import 'package:big_brother/game/game_state.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-/// Randomly prompts the player to press a control button every 5–10 seconds.
+/// Randomly prompts the player to press a control button every 2–4 seconds.
 ///
 /// Spawns an [InputButton] above the hero's head showing either a jump
 /// ([InputButtonIcon.xboxA]) or dash ([InputButtonIcon.xboxB]) prompt.
@@ -16,9 +17,11 @@ import 'package:flame_behaviors/flame_behaviors.dart';
 /// [KeyboardMovementBehavior] handles dismissing it early when the correct
 /// key is pressed.
 class RandomInputBehavior extends Behavior<HeroEntity> {
-  static const double _promptDuration = 1.0;
+  static const double _promptDuration = 3.0;
   static const double _minInterval = 2.0;
   static const double _maxInterval = 4.0;
+
+  final _gameState = GameState.instance;
 
   static const List<InputButtonIcon> _promptIcons = [
     InputButtonIcon.xboxA,
@@ -49,6 +52,9 @@ class RandomInputBehavior extends Behavior<HeroEntity> {
       _minInterval + _random.nextDouble() * (_maxInterval - _minInterval);
 
   void _spawnButton() {
+    if (_gameState.allItemsCollected && _gameState.flagRaised) {
+      return;
+    }
     final icon = _promptIcons[_random.nextInt(_promptIcons.length)];
 
     // Avoid duplicates — skip if this icon is already shown.

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// Lives inside the level entity (world space) but uses a fixed-position
 /// offset from the camera so it always appears anchored to the top-left of the
 /// visible screen.
-class FruitCounterHud extends PositionedEntity with HasGameReference {
+class ItemCounterHud extends PositionedEntity with HasGameReference {
   static const double _iconSize = 16;
   static const Color _textColor = Color(0xFFe8e4ff);
 
@@ -38,7 +38,7 @@ class FruitCounterHud extends PositionedEntity with HasGameReference {
 
     // ── Count label ─────────────────────────────────────────────────────────
     _countLabel = TextComponent(
-      text: '× ${GameState.instance.fruitsCollected}',
+      text: '× ${GameState.instance.itemCollected}',
       position: Vector2(_iconSize + 4, 2),
       textRenderer: TextPaint(
         style: const TextStyle(
@@ -69,7 +69,7 @@ class FruitCounterHud extends PositionedEntity with HasGameReference {
   }
 
   void _onFruitChanged() {
-    _countLabel.text = '× ${GameState.instance.fruitsCollected}';
+    _countLabel.text = '× ${GameState.instance.itemCollected}';
     _popAnimation();
   }
 

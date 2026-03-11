@@ -11,7 +11,7 @@ import 'package:big_brother/entities/item/pineapple.dart';
 import 'package:big_brother/entities/item/strawberry.dart';
 import 'package:big_brother/entities/level/one_way_platform.dart';
 import 'package:big_brother/entities/object/flag/flag.dart';
-import 'package:big_brother/entities/ui/fruit_counter_hud.dart';
+import 'package:big_brother/entities/ui/item_counter_hud.dart';
 import 'package:big_brother/entities/ui/suspicion_hud.dart';
 import 'package:big_brother/game/game_state.dart';
 import 'package:collection/collection.dart';
@@ -22,17 +22,18 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flame_tiled_utils/flame_tiled_utils.dart';
 
 class LevelEntity extends PositionedEntity with HasGameReference {
+  int totalItems = 0;
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Reset game state for fresh level start.
     GameState.instance.reset();
 
     final imageCompiler = ImageBatchCompiler();
     final tiledMap = await TiledComponent.load(
       'level_1.tmx',
-      Vector2.all(16), // tile size in the map
+      Vector2.all(16),
       prefix: 'assets/images/tiles/',
       images: Images(
         prefix: 'assets/images/tiles/',
@@ -56,20 +57,28 @@ class LevelEntity extends PositionedEntity with HasGameReference {
     for (final item in itemGroups?.objects ?? <TiledObject>[]) {
       switch (item.name) {
         case 'apple':
+          totalItems++;
           add(Apple()..position = item.position);
         case 'bananas':
+          totalItems++;
           add(Bananas()..position = item.position);
         case 'cherries':
+          totalItems++;
           add(Cherries()..position = item.position);
         case 'kiwi':
+          totalItems++;
           add(Kiwi()..position = item.position);
         case 'melon':
+          totalItems++;
           add(Melon()..position = item.position);
         case 'orange':
+          totalItems++;
           add(Orange()..position = item.position);
         case 'pineapple':
+          totalItems++;
           add(Pineapple()..position = item.position);
         case 'strawberry':
+          totalItems++;
           add(Strawberry()..position = item.position);
         case 'flag':
           add(FlagEntity()..position = item.position);
@@ -77,6 +86,9 @@ class LevelEntity extends PositionedEntity with HasGameReference {
           break;
       }
     }
+
+    // Set total collectible items in GameState
+    GameState.instance.totalItems = totalItems;
 
     add(maps);
 
@@ -87,14 +99,14 @@ class LevelEntity extends PositionedEntity with HasGameReference {
         for (var y = 0; y < tileData.length; y++) {
           for (var x = 0; x < tileData[y].length; x++) {
             final tile = tileData[y][x];
-            // Get the tile object to check its class/type
+
             final tileObj = tiledMap.tileMap.map.tileByGid(tile.tile);
             if (tileObj != null && (tileObj.class_ == 'platform')) {
               final platformPosition = Vector2(
                 x * tiledMap.tileMap.destTileSize.x,
                 y * tiledMap.tileMap.destTileSize.y,
               );
-              // Adding OneWayPlatform
+
               add(
                 OneWayPlatform(
                   position: platformPosition,
@@ -130,8 +142,7 @@ class LevelEntity extends PositionedEntity with HasGameReference {
       add(hero);
     }
 
-    // ── HUD components (world-space, track camera each frame) ────────────────
-    add(FruitCounterHud());
+    add(ItemCounterHud());
     add(SuspicionHud(position: Vector2(size.x - 88, -20)));
   }
 }
