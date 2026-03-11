@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:big_brother/entities/object/flag/behavior/flag_touch_behavior.dart';
+import 'package:big_brother/game/game_state.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -38,6 +39,8 @@ class FlagEntity extends PositionedEntity {
     // animation, giving us the perfect hook to move to idle.
     _animationComponent.animationTicker?.onComplete = () {
       _animationComponent.current = FlagState.idle;
+      // Notify game state that flag animation is complete
+      GameState.instance.completeFlagAnimation();
     };
   }
 

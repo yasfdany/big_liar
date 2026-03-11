@@ -24,6 +24,10 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flame_tiled_utils/flame_tiled_utils.dart';
 
 class LevelEntity extends PositionedEntity with HasGameReference {
+  LevelEntity({this.levelName});
+
+  final String? levelName;
+
   int totalItems = 0;
   late String bgImage;
 
@@ -33,9 +37,11 @@ class LevelEntity extends PositionedEntity with HasGameReference {
 
     GameState.instance.reset();
 
+    final levelFile = '$levelName.tmx';
+
     final imageCompiler = ImageBatchCompiler();
     final tiledMap = await TiledComponent.load(
-      'level_1.tmx',
+      levelFile,
       Vector2.all(16),
       prefix: 'assets/images/tiles/',
       images: Images(
