@@ -36,6 +36,11 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    // Don't process input if hero is in hit state (death)
+    if (parent.state == HeroState.hit) {
+      return false;
+    }
+
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
       _targetMovement = -1;
@@ -86,6 +91,11 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
 
   @override
   void update(double dt) {
+    // Don't move or change state if hero is in hit state (death)
+    if (parent.state == HeroState.hit) {
+      return;
+    }
+
     // Tick dash timers
     if (_dashCooldownTimer > 0) {
       _dashCooldownTimer -= dt;

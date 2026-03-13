@@ -26,6 +26,7 @@ class AssetItems {
 class AssetTiles {
 	static const String level1 = 'assets/images/tiles/level_1.tmx';
 	static const String level2 = 'assets/images/tiles/level_2.tmx';
+	static const String level3 = 'assets/images/tiles/level_3.tmx';
 	static const String tile = 'assets/images/tiles/tile.png';
 }
 
@@ -51,6 +52,10 @@ class AssetObjects {
 	static const String flagIdle = 'assets/images/objects/flag_idle.png';
 	static const String flagPole = 'assets/images/objects/flag_pole.png';
 	static const String flagRaise = 'assets/images/objects/flag_raise.png';
+}
+
+class AssetSpikes {
+	static const String idle = 'assets/images/traps/spikes/idle.png';
 }
 
 class AssetFonts {

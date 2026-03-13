@@ -78,6 +78,43 @@ class BigBrotherGame extends FlameGame
     }
   }
 
+  void restartCurrentLevel() {
+    if (_transitioning) {
+      return;
+    }
+
+    _transitioning = true;
+
+    _currentTransition = CircularWipeTransition.closing(
+      onComplete: _reloadCurrentLevel,
+    );
+
+    camera.viewport.add(_currentTransition!);
+  }
+
+  void _reloadCurrentLevel() {
+    if (_currentTransition != null) {
+      camera.viewport.remove(_currentTransition!);
+      _currentTransition = null;
+    }
+
+    world.removeAll(world.children);
+
+    // Reset the game state for the current level
+    GameState.instance.reset();
+
+    // Reload the same level
+    final currentLevelName = GameState.instance.levelName;
+    level = LevelEntity(levelName: currentLevelName);
+    world.add(level);
+
+    _currentTransition = CircularWipeTransition.opening(
+      onComplete: _onTransitionComplete,
+    );
+
+    camera.viewport.add(_currentTransition!);
+  }
+
   @override
   void dispose() {
     GameState.instance.removeLevelCompleteListener(_onLevelComplete);

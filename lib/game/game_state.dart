@@ -4,6 +4,7 @@ class GameState {
   static final GameState instance = GameState._();
 
   final List<String> levels = [
+    'level_3',
     'level_1',
     'level_2',
   ];

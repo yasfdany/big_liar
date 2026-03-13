@@ -13,6 +13,7 @@ import 'package:big_brother/entities/item/strawberry.dart';
 import 'package:big_brother/entities/level/one_way_platform.dart';
 import 'package:big_brother/entities/level/solid_platform.dart';
 import 'package:big_brother/entities/object/flag/flag.dart';
+import 'package:big_brother/entities/object/spike/spike.dart';
 import 'package:big_brother/entities/ui/item_counter_hud.dart';
 import 'package:big_brother/entities/ui/suspicion_hud.dart';
 import 'package:big_brother/game/game_state.dart';
@@ -98,6 +99,16 @@ class LevelEntity extends PositionedEntity with HasGameReference {
           add(Strawberry()..position = item.position);
         case 'flag':
           add(FlagEntity()..position = item.position);
+        case 'spike':
+          add(Spike()..position = item.position);
+        case 'bottom_spike':
+          add(Spike()..position = item.position);
+        case 'top_spike':
+          add(Spike(direction: SpikeDirection.top)..position = item.position);
+        case 'left_spike':
+          add(Spike(direction: SpikeDirection.left)..position = item.position);
+        case 'right_spike':
+          add(Spike(direction: SpikeDirection.right)..position = item.position);
         default:
           break;
       }

@@ -42,5 +42,12 @@
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+      window.addEventListener("keydown", function(e) {
+          if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) {
+              e.preventDefault();
+          }
+      }, { passive: false });
+  </script>
 </body>
 </html>

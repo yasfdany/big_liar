@@ -33,6 +33,7 @@ flutter:
     - assets/images/hero/
     - assets/images/ui/
     - assets/images/objects/
+    - assets/images/traps/spikes/
     - assets/fonts/
 
   fonts:

@@ -8,6 +8,7 @@ class OneWayPlatformCollisionBehavior
   @override
   void onCollision(Set<Vector2> intersectionPoints, OneWayPlatform other) {
     super.onCollision(intersectionPoints, other);
+
     if (parent.verticalVelocity > 0) {
       final heroBottom =
           parent.position.y + parent.size.y * (1 - parent.anchor.y);

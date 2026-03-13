@@ -115,6 +115,7 @@ class HeroEntity extends PositionedEntity {
           amount: 7,
           stepTime: 0.05,
           textureSize: Vector2.all(32),
+          loop: false,
         ),
       ),
       HeroState.doubleJump: SpriteAnimation.fromFrameData(

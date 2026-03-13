@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            iframe {
+                width: 100%;
+                height: 100vh;
+                border: none;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <iframe src="https://big-liar.web.app/" frameborder="0"/>
+        <script>
+            window.addEventListener("keydown", function(e) {
+                if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        </script>
+    </body>
+</html>

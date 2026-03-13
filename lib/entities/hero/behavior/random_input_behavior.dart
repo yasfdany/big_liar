@@ -30,6 +30,11 @@ class RandomInputBehavior extends Behavior<HeroEntity> {
 
   @override
   void update(double dt) {
+    // Don't spawn input prompts if hero is hit (dead)
+    if (parent.state == HeroState.hit) {
+      return;
+    }
+
     _timer += dt;
 
     if (_timer >= _interval) {
@@ -43,6 +48,11 @@ class RandomInputBehavior extends Behavior<HeroEntity> {
       _minInterval + _random.nextDouble() * (_maxInterval - _minInterval);
 
   void _spawnButton() {
+    // Don't spawn buttons if hero is hit
+    if (parent.state == HeroState.hit) {
+      return;
+    }
+
     if (_gameState.allItemsCollected && _gameState.flagRaised) {
       return;
     }
@@ -61,5 +71,13 @@ class RandomInputBehavior extends Behavior<HeroEntity> {
     );
 
     parent.add(button);
+  }
+
+  /// Removes all existing input button prompts
+  void clearAllPrompts() {
+    final buttons = parent.children.whereType<InputButton>().toList();
+    for (final button in buttons) {
+      button.removeFromParent();
+    }
   }
 }
