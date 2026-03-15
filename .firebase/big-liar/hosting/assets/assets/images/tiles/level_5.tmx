@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="35" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="428">
+ <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16" tilecount="242" columns="22">
+  <image source="tile.png" trans="ff00ff" width="352" height="176"/>
+  <tile id="6" type="solid"/>
+  <tile id="7" type="solid"/>
+  <tile id="8" type="solid"/>
+  <tile id="12" type="solid"/>
+  <tile id="13" type="solid"/>
+  <tile id="14" type="solid"/>
+  <tile id="15" type="solid"/>
+  <tile id="28" type="solid"/>
+  <tile id="30" type="solid"/>
+  <tile id="34" type="solid"/>
+  <tile id="35" type="solid"/>
+  <tile id="36" type="solid"/>
+  <tile id="37" type="solid"/>
+  <tile id="39" type="platform"/>
+  <tile id="40" type="platform"/>
+  <tile id="41" type="platform"/>
+  <tile id="50" type="solid"/>
+  <tile id="51" type="solid"/>
+  <tile id="52" type="solid"/>
+  <tile id="57" type="solid"/>
+  <tile id="58" type="solid"/>
+  <tile id="59" type="solid"/>
+  <tile id="94" type="solid"/>
+  <tile id="95" type="solid"/>
+  <tile id="96" type="solid"/>
+  <tile id="100" type="solid"/>
+  <tile id="101" type="solid"/>
+  <tile id="102" type="solid"/>
+  <tile id="103" type="solid"/>
+  <tile id="105" type="solid"/>
+  <tile id="106" type="solid"/>
+  <tile id="107" type="solid"/>
+  <tile id="116" type="solid"/>
+  <tile id="118" type="solid"/>
+  <tile id="122" type="solid"/>
+  <tile id="123" type="solid"/>
+  <tile id="124" type="solid"/>
+  <tile id="125" type="solid"/>
+  <tile id="127" type="solid"/>
+  <tile id="129" type="solid"/>
+  <tile id="138" type="solid"/>
+  <tile id="139" type="solid"/>
+  <tile id="140" type="solid"/>
+  <tile id="145" type="solid"/>
+  <tile id="146" type="solid"/>
+  <tile id="147" type="solid"/>
+  <tile id="149" type="solid"/>
+  <tile id="150" type="solid"/>
+  <tile id="151" type="solid"/>
+  <tile id="182" type="solid"/>
+  <tile id="183" type="solid"/>
+  <tile id="184" type="solid"/>
+  <tile id="188" type="solid"/>
+  <tile id="189" type="solid"/>
+  <tile id="190" type="solid"/>
+  <tile id="191" type="solid"/>
+  <tile id="193" type="solid"/>
+  <tile id="194" type="solid"/>
+  <tile id="195" type="solid"/>
+  <tile id="196" type="solid"/>
+  <tile id="204" type="solid"/>
+  <tile id="206" type="solid"/>
+  <tile id="210" type="solid"/>
+  <tile id="211" type="solid"/>
+  <tile id="212" type="solid"/>
+  <tile id="213" type="solid"/>
+  <tile id="215" type="solid"/>
+  <tile id="216" type="solid"/>
+  <tile id="217" type="solid"/>
+  <tile id="218" type="solid"/>
+  <tile id="226" type="solid"/>
+  <tile id="227" type="solid"/>
+  <tile id="228" type="solid"/>
+  <tile id="233" type="solid"/>
+  <tile id="234" type="solid"/>
+  <tile id="235" type="solid"/>
+  <tile id="238" type="solid"/>
+  <tile id="239" type="solid"/>
+  <tile id="240" type="solid"/>
+ </tileset>
+ <layer id="2" name="ground" width="35" height="20">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,40,41,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,40,41,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,40,41,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,40,41,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,96,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,95,96,96,96,96,96,0,
+0,118,118,119,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,118,118,118,118,0,
+0,118,118,119,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,117,118,118,118,118,118,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="1" name="frame" width="35" height="20">
+  <properties>
+   <property name="background" value="yellow"/>
+  </properties>
+  <data encoding="csv">
+92,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,134,93,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,199,
+114,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,115
+</data>
+ </layer>
+ <objectgroup id="3" name="position">
+  <object id="422" name="start" x="24" y="224" width="32" height="32"/>
+  <object id="423" name="end" x="464" y="192" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="4" name="items">
+  <object id="398" name="bottom_spike" x="64" y="288" width="16" height="16"/>
+  <object id="409" name="bottom_spike" x="160" y="288" width="16" height="16"/>
+  <object id="415" name="bottom_spike" x="256" y="288" width="16" height="16"/>
+  <object id="421" name="bottom_spike" x="352" y="288" width="16" height="16"/>
+  <object id="403" name="bottom_spike" x="112" y="288" width="16" height="16"/>
+  <object id="404" name="bottom_spike" x="208" y="288" width="16" height="16"/>
+  <object id="410" name="bottom_spike" x="304" y="288" width="16" height="16"/>
+  <object id="416" name="bottom_spike" x="400" y="288" width="16" height="16"/>
+  <object id="399" name="bottom_spike" x="80" y="288" width="16" height="16"/>
+  <object id="408" name="bottom_spike" x="176" y="288" width="16" height="16"/>
+  <object id="414" name="bottom_spike" x="272" y="288" width="16" height="16"/>
+  <object id="420" name="bottom_spike" x="368" y="288" width="16" height="16"/>
+  <object id="402" name="bottom_spike" x="128" y="288" width="16" height="16"/>
+  <object id="405" name="bottom_spike" x="224" y="288" width="16" height="16"/>
+  <object id="411" name="bottom_spike" x="320" y="288" width="16" height="16"/>
+  <object id="417" name="bottom_spike" x="416" y="288" width="16" height="16"/>
+  <object id="400" name="bottom_spike" x="96" y="288" width="16" height="16"/>
+  <object id="407" name="bottom_spike" x="192" y="288" width="16" height="16"/>
+  <object id="413" name="bottom_spike" x="288" y="288" width="16" height="16"/>
+  <object id="419" name="bottom_spike" x="384" y="288" width="16" height="16"/>
+  <object id="401" name="bottom_spike" x="144" y="288" width="16" height="16"/>
+  <object id="406" name="bottom_spike" x="240" y="288" width="16" height="16"/>
+  <object id="412" name="bottom_spike" x="336" y="288" width="16" height="16"/>
+  <object id="418" name="bottom_spike" x="432" y="288" width="16" height="16"/>
+  <object id="424" name="apple" x="24" y="112" width="32" height="32"/>
+  <object id="425" name="apple" x="72" y="160" width="32" height="32"/>
+  <object id="426" name="apple" x="72" y="64" width="32" height="32"/>
+  <object id="427" name="apple" x="24" y="16" width="32" height="32"/>
+ </objectgroup>
+</map>

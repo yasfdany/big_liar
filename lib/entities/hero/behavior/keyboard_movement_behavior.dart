@@ -28,6 +28,10 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
   bool _hasDoubleJumped = false;
   bool _hasTripleJumped = false;
 
+  // Coyote time: allows jumping shortly after leaving a platform
+  double _coyoteTimer = 0;
+  static const double _coyoteTime = 0.1;
+
   // For footstep sound tracking
   double _footstepTimer = 0;
   static const double _footstepInterval =
@@ -81,8 +85,10 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     final keyboardJumpPressed = keysPressed.contains(LogicalKeyboardKey.keyW) ||
         keysPressed.contains(LogicalKeyboardKey.arrowUp);
 
+    final canCoyoteJump = !parent.isOnGround && _coyoteTimer > 0;
+
     if (keyboardJumpPressed) {
-      if (parent.isOnGround || !_hasDoubleJumped) {
+      if (parent.isOnGround || canCoyoteJump || !_hasDoubleJumped) {
         final inputButton = parent.children.whereType<InputButton>();
         for (final button in inputButton) {
           if (button.icon == InputButtonIcon.xboxA) {
@@ -92,8 +98,9 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
         }
       }
 
-      if (parent.isOnGround) {
+      if (parent.isOnGround || canCoyoteJump) {
         _isJumping = true;
+        _coyoteTimer = 0;
         SfxManager.instance.playJump();
       } else if (!_hasDoubleJumped) {
         _isJumping = true;
@@ -162,6 +169,9 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
     if (parent.isOnGround) {
       _hasDoubleJumped = false;
       _hasTripleJumped = false;
+      _coyoteTimer = _coyoteTime;
+    } else {
+      _coyoteTimer -= dt;
     }
 
     if (_isDashing) {
@@ -303,7 +313,9 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
   void triggerJump() {
     if (parent.state == HeroState.hit) return;
 
-    if (parent.isOnGround || !_hasDoubleJumped) {
+    final canCoyoteJump = !parent.isOnGround && _coyoteTimer > 0;
+
+    if (parent.isOnGround || canCoyoteJump || !_hasDoubleJumped) {
       final inputButton = parent.children.whereType<InputButton>();
       for (final button in inputButton) {
         if (button.icon == InputButtonIcon.xboxA) {
@@ -313,8 +325,9 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       }
     }
 
-    if (parent.isOnGround) {
+    if (parent.isOnGround || canCoyoteJump) {
       _isJumping = true;
+      _coyoteTimer = 0;
       SfxManager.instance.playJump();
     } else if (!_hasDoubleJumped) {
       _isJumping = true;

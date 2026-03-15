@@ -30,6 +30,7 @@ class AssetTiles {
 	static const String level3 = 'assets/images/tiles/level_3.tmx';
 	static const String level4 = 'assets/images/tiles/level_4.tmx';
 	static const String level5 = 'assets/images/tiles/level_5.tmx';
+	static const String level6 = 'assets/images/tiles/level_6.tmx';
 	static const String tile = 'assets/images/tiles/tile.png';
 }
 

@@ -11,6 +11,7 @@ class GameState {
     'level_3',
     'level_4',
     'level_5',
+    'level_6',
   ];
 
   int _itemCollected = 0;
