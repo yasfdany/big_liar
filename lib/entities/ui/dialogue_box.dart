@@ -11,9 +11,13 @@ const List<String> _dialoguePhrases = [
   "Hey… my button didn't do anything.",
   "Are you sure I'm playing?",
   'Why is nothing happening when I press?',
-  "You didn't use my move…",
   'Maybe my controller is broken?',
   'Did you see me press it?',
+  'Wait… am I actually playing?',
+  'My buttons never work…',
+  "You're the only one playing, aren't you?",
+  'Is my controller even connected?',
+  'You said we were both playing…',
 ];
 
 /// A bottom-of-screen HUD panel that shows a character avatar alongside
