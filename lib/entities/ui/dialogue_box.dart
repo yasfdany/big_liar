@@ -26,6 +26,9 @@ class DialogueBox extends PositionComponent with HasGameReference, HasPaint {
 
   final String phrase;
 
+  // Track whether we're in portrait mode for animation direction
+  late bool _isPortrait;
+
   static const double _panelHeight = 56.0;
   static const double _panelPadding = 24.0;
   static const double _avatarSize = 56.0;
@@ -46,9 +49,18 @@ class DialogueBox extends PositionComponent with HasGameReference, HasPaint {
   @override
   FutureOr<void> onLoad() async {
     final screenW = game.size.x;
+    final screenH = game.size.y;
+    _isPortrait = screenH > screenW;
 
     size = Vector2(560, _panelHeight + _panelPadding * 2);
-    position = Vector2(game.size.x / 2, game.size.y - size.y);
+
+    // Position at top for portrait, bottom for landscape
+    if (_isPortrait) {
+      position = Vector2(screenW / 2, size.y / 2);
+    } else {
+      position = Vector2(screenW / 2, screenH - size.y / 2);
+    }
+
     opacity = 0;
 
     // ── Nine-tile box frame ────────────────────────────────────────────────
@@ -114,7 +126,9 @@ class DialogueBox extends PositionComponent with HasGameReference, HasPaint {
     );
     add(_label);
 
-    // ── Slide-up + fade-in ─────────────────────────────────────────────────
+    // ── Slide animation + fade-in ──────────────────────────────────────────
+    final slideDirection = _isPortrait ? Vector2(0, 6) : Vector2(0, -6);
+
     add(
       OpacityEffect.to(
         1,
@@ -123,10 +137,14 @@ class DialogueBox extends PositionComponent with HasGameReference, HasPaint {
     );
     add(
       MoveEffect.by(
-        Vector2(0, -6),
+        slideDirection,
         EffectController(duration: 0.25, curve: Curves.easeOut),
       ),
     );
+
+    if (_isPortrait) {
+      scale = Vector2.all(0.8);
+    }
   }
 
   @override
@@ -159,6 +177,9 @@ class DialogueBox extends PositionComponent with HasGameReference, HasPaint {
     }
     _holdTimer = -9999; // sentinel so this won't fire again
 
+    // Slide up when at top (portrait), slide down when at bottom (landscape)
+    final dismissSlideDirection = _isPortrait ? Vector2(0, -6) : Vector2(0, 6);
+
     add(
       OpacityEffect.to(
         0,
@@ -171,7 +192,7 @@ class DialogueBox extends PositionComponent with HasGameReference, HasPaint {
     );
     add(
       MoveEffect.by(
-        Vector2(0, 6),
+        dismissSlideDirection,
         EffectController(duration: _fadeDuration, curve: Curves.easeIn),
       ),
     );

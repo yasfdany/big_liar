@@ -2,6 +2,7 @@ import 'package:big_brother/entities/level/level_entity.dart';
 import 'package:big_brother/entities/ui/circular_wipe_transition.dart';
 import 'package:big_brother/game/game_state.dart';
 import 'package:big_brother/game/sfx_manager.dart';
+import 'package:big_brother/overlays/virtual_gamepad.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,46 @@ import 'package:flutter/material.dart';
 class BigBrotherGame extends FlameGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
   static const double _initialRevealDelay = 0.6;
+  static const double _baseZoom = 1.5;
+  static const double _portraitZoomFactor = 0.5;
 
   final Paint _backgroundColor = Paint()..color = const Color(0xff211f30);
   late LevelEntity level;
   CircularWipeTransition? _currentTransition;
   bool _transitioning = false;
+  bool _wasPortrait = false;
+
+  double _calculateOptimalZoom() {
+    final isPortrait = size.y > size.x;
+
+    if (isPortrait) {
+      return _baseZoom * _portraitZoomFactor;
+    } else {
+      return _baseZoom;
+    }
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+
+    camera.viewfinder.zoom = _calculateOptimalZoom();
+    _handleOrientationChange();
+  }
+
+  void _handleOrientationChange() {
+    final isPortrait = size.y > size.x;
+
+    if (isPortrait && !_wasPortrait) {
+      // Switched to portrait - show virtual gamepad
+      overlays.add('virtual_gamepad');
+    } else if (!isPortrait && _wasPortrait) {
+      // Switched to landscape - hide virtual gamepad
+      overlays.remove('virtual_gamepad');
+    }
+
+    _wasPortrait = isPortrait;
+  }
 
   @override
   Future<void> onLoad() async {
@@ -25,7 +61,7 @@ class BigBrotherGame extends FlameGame
       );
     });
 
-    camera.viewfinder.zoom = 1.5;
+    camera.viewfinder.zoom = _calculateOptimalZoom();
 
     level = LevelEntity(levelName: GameState.instance.levelName);
     world.add(level);
@@ -38,6 +74,9 @@ class BigBrotherGame extends FlameGame
       delay: _initialRevealDelay,
     );
     camera.viewport.add(_currentTransition!);
+
+    // Check initial orientation
+    _handleOrientationChange();
   }
 
   void _onLevelComplete() {
@@ -182,7 +221,12 @@ class _BigBrotherScreenState extends State<BigBrotherScreen>
     if (!_gameStarted) {
       return _buildStartScreen();
     }
-    return GameWidget(game: game);
+    return GameWidget(
+      game: game,
+      overlayBuilderMap: {
+        'virtual_gamepad': (_, __) => VirtualGamepadOverlay(game: game),
+      },
+    );
   }
 
   Widget _buildStartScreen() {

@@ -13,8 +13,8 @@ class BackgroundEntity extends Entity {
 
     final parallaxComponent = await ParallaxComponent.load(
       [ParallaxImageData('bg/$bgImage.png')],
-      baseVelocity: Vector2(0, -20),
-      size: Vector2(560, 318),
+      baseVelocity: Vector2(2, -20),
+      size: Vector2(558, 318),
       repeat: ImageRepeat.repeat,
       filterQuality: FilterQuality.low,
       fill: LayerFill.none,

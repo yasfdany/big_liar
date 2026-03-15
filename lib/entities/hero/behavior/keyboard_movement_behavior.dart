@@ -53,24 +53,40 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
       return false;
     }
 
-    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-        keysPressed.contains(LogicalKeyboardKey.keyA)) {
+    _handleMovementInput(keysPressed);
+    _handleJumpInput(keysPressed);
+    _handleDashInput(event, keysPressed);
+
+    return super.onKeyEvent(event, keysPressed);
+  }
+
+  void _handleMovementInput(Set<LogicalKeyboardKey> keysPressed) {
+    // Handle keyboard movement only
+    final leftPressed = keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+        keysPressed.contains(LogicalKeyboardKey.keyA);
+    final rightPressed = keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+        keysPressed.contains(LogicalKeyboardKey.keyD);
+
+    if (leftPressed) {
       _targetMovement = -1;
-    } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-        keysPressed.contains(LogicalKeyboardKey.keyD)) {
+    } else if (rightPressed) {
       _targetMovement = 1;
     } else {
       _targetMovement = 0;
     }
+  }
 
-    if (keysPressed.contains(LogicalKeyboardKey.keyW) ||
-        keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+  void _handleJumpInput(Set<LogicalKeyboardKey> keysPressed) {
+    // Handle keyboard jump only
+    final keyboardJumpPressed = keysPressed.contains(LogicalKeyboardKey.keyW) ||
+        keysPressed.contains(LogicalKeyboardKey.arrowUp);
+
+    if (keyboardJumpPressed) {
       if (parent.isOnGround || !_hasDoubleJumped) {
         final inputButton = parent.children.whereType<InputButton>();
         for (final button in inputButton) {
           if (button.icon == InputButtonIcon.xboxA) {
             button.resetButton(collect: true);
-
             _jumpBonusActive = true;
           }
         }
@@ -90,15 +106,19 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
         SfxManager.instance.playJump();
       }
     }
+  }
 
-    if (event is KeyDownEvent &&
-        keysPressed.contains(LogicalKeyboardKey.space)) {
+  void _handleDashInput(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    // Handle keyboard dash only
+    final keyboardDashPressed =
+        event is KeyDownEvent && keysPressed.contains(LogicalKeyboardKey.space);
+
+    if (keyboardDashPressed) {
       if (_dashCooldownTimer <= 0 && !_isDashing) {
         final inputButton = parent.children.whereType<InputButton>();
         for (final button in inputButton) {
           if (button.icon == InputButtonIcon.xboxB) {
             button.resetButton(collect: true);
-
             _dashBonusActive = true;
           }
         }
@@ -115,8 +135,6 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
         _dashCooldownTimer = _dashCooldown;
       }
     }
-
-    return super.onKeyEvent(event, keysPressed);
   }
 
   @override
@@ -279,5 +297,66 @@ class KeyboardMovementBehavior extends Behavior<HeroEntity>
         _hasTripleJumped = false;
       }
     }
+  }
+
+  /// Public method for virtual gamepad to trigger jump
+  void triggerJump() {
+    if (parent.state == HeroState.hit) return;
+
+    if (parent.isOnGround || !_hasDoubleJumped) {
+      final inputButton = parent.children.whereType<InputButton>();
+      for (final button in inputButton) {
+        if (button.icon == InputButtonIcon.xboxA) {
+          button.resetButton(collect: true);
+          _jumpBonusActive = true;
+        }
+      }
+    }
+
+    if (parent.isOnGround) {
+      _isJumping = true;
+      SfxManager.instance.playJump();
+    } else if (!_hasDoubleJumped) {
+      _isJumping = true;
+      _hasDoubleJumped = true;
+      SfxManager.instance.playJump();
+    } else if (_jumpBonusActive && !_hasTripleJumped) {
+      _isJumping = true;
+      _hasTripleJumped = true;
+      _jumpBonusActive = false;
+      SfxManager.instance.playJump();
+    }
+  }
+
+  /// Public method for virtual gamepad to trigger dash
+  void triggerDash() {
+    if (parent.state == HeroState.hit) return;
+
+    if (_dashCooldownTimer <= 0 && !_isDashing) {
+      final inputButton = parent.children.whereType<InputButton>();
+      for (final button in inputButton) {
+        if (button.icon == InputButtonIcon.xboxB) {
+          button.resetButton(collect: true);
+          _dashBonusActive = true;
+        }
+      }
+
+      _isDashing = true;
+      SfxManager.instance.playDash(volume: 0.8);
+
+      if (_dashBonusActive) {
+        _dashTimer = _bonusDashDuration;
+        _dashBonusActive = false;
+      } else {
+        _dashTimer = _dashDuration;
+      }
+      _dashCooldownTimer = _dashCooldown;
+    }
+  }
+
+  /// Public method for virtual gamepad to control movement
+  void setMovementDirection(double direction) {
+    if (parent.state == HeroState.hit) return;
+    _targetMovement = direction;
   }
 }
