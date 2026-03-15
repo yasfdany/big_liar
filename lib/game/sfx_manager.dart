@@ -22,6 +22,7 @@ class SfxManager {
   AudioSource? _jumpSource;
   AudioSource? _dashSource;
   AudioSource? _damageSource;
+  AudioSource? _powerupSource;
 
   double _getRandomRate({double minRate = 0.85, double maxRate = 1.15}) {
     final rate = minRate + (_random.nextDouble() * (maxRate - minRate));
@@ -67,6 +68,7 @@ class SfxManager {
       _jumpSource = await _soloud.loadAsset('assets/audios/sfx_jump.wav');
       _dashSource = await _soloud.loadAsset('assets/audios/sfx_dash.wav');
       _damageSource = await _soloud.loadAsset('assets/audios/sfx_damage.wav');
+      _powerupSource = await _soloud.loadAsset('assets/audios/sfx_powerup.wav');
     } on Exception catch (e) {
       debugPrint('Failed to load audio sources: $e');
     }
@@ -179,6 +181,21 @@ class SfxManager {
   }) async {
     return _playSound(
       _damageSource,
+      volume: volume,
+      rate: rate,
+      minRate: minRate,
+      maxRate: maxRate,
+    );
+  }
+
+  Future<SoundHandle?> playPowerup({
+    double volume = 1.0,
+    double? rate,
+    double? minRate,
+    double? maxRate,
+  }) async {
+    return _playSound(
+      _powerupSource,
       volume: volume,
       rate: rate,
       minRate: minRate,
@@ -302,6 +319,9 @@ class SfxManager {
         }
         if (_damageSource != null) {
           await _soloud.disposeSource(_damageSource!);
+        }
+        if (_powerupSource != null) {
+          await _soloud.disposeSource(_powerupSource!);
         }
 
         _soloud.deinit();

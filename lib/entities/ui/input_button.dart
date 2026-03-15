@@ -6,6 +6,7 @@ import 'package:big_brother/entities/ui/dialogue_box.dart';
 import 'package:big_brother/entities/ui/input_button_icon.dart';
 import 'package:big_brother/game/big_brother_game.dart';
 import 'package:big_brother/game/game_state.dart';
+import 'package:big_brother/game/sfx_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
@@ -85,6 +86,11 @@ class InputButton extends PositionedEntity with HasGameReference {
   void resetButton({bool collect = false}) {
     onFinish?.call();
     _animate = true;
+
+    if (collect) {
+      // Play powerup sound when player successfully presses the right button
+      SfxManager.instance.playPowerup();
+    }
 
     if (!collect) {
       // Increase suspicion level.

@@ -73,5 +73,6 @@ class AssetAudios {
 	static const String sfxFlagg = 'assets/audios/sfx_flagg.wav';
 	static const String sfxFootstep = 'assets/audios/sfx_footstep.wav';
 	static const String sfxJump = 'assets/audios/sfx_jump.wav';
+	static const String sfxPowerup = 'assets/audios/sfx_powerup.wav';
 }
 

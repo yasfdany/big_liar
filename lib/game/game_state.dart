@@ -6,9 +6,9 @@ class GameState {
   static final GameState instance = GameState._();
 
   final List<String> levels = [
-    'level_3',
     'level_1',
     'level_2',
+    'level_3',
   ];
 
   int _itemCollected = 0;
@@ -71,7 +71,7 @@ class GameState {
 
   static const double _drainRate = 3.0;
 
-  static const double _suspicionPerFailure = 20.0;
+  static const double _suspicionPerFailure = 34;
 
   void addSuspicion([double amount = _suspicionPerFailure]) {
     _suspicion = (_suspicion + amount).clamp(0, 100);

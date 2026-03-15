@@ -1,19 +1,25 @@
 import 'dart:async';
-import 'dart:ui' show Rect;
 
 import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/one_way_platform_collision_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/particle_effect_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/random_input_behavior.dart';
 import 'package:big_brother/entities/hero/behavior/solid_platform_collision_behavior.dart';
+import 'package:big_brother/game/big_brother_game.dart';
+import 'package:big_brother/game/game_state.dart';
+import 'package:big_brother/game/sfx_manager.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/geometry.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
+import 'package:flutter/material.dart';
 
 enum HeroState { idle, run, jump, fall, doubleJump, hit, wallJump, dash }
 
-class HeroEntity extends PositionedEntity {
+class HeroEntity extends PositionedEntity
+    with HasGameReference<BigBrotherGame> {
   HeroEntity({
     super.position,
   }) : super(
@@ -56,6 +62,12 @@ class HeroEntity extends PositionedEntity {
   bool get isFlippedHorizontally => _animationComponent.isFlippedHorizontally;
   @override
   void flipHorizontally() => _animationComponent.flipHorizontally();
+
+  @override
+  void onRemove() {
+    GameState.instance.removeSuspicionListener(_suspicionListener);
+    super.onRemove();
+  }
 
   @override
   FutureOr<void> onLoad() async {
@@ -145,5 +157,72 @@ class HeroEntity extends PositionedEntity {
     );
 
     add(_animationComponent);
+    GameState.instance.addSuspicionListener(_suspicionListener);
+  }
+
+  void _suspicionListener() {
+    if (GameState.instance.suspicion >= 100) {
+      die();
+    }
+  }
+
+  void die() {
+    SfxManager.instance.playDeathScream();
+    SfxManager.instance.playFalling(volume: 0.1);
+
+    fall();
+
+    state = HeroState.hit;
+
+    horizontalVelocity = 0;
+    verticalVelocity = 0;
+
+    final randomInputBehavior = findBehavior<RandomInputBehavior>();
+    randomInputBehavior.clearAllPrompts();
+
+    final restartTimer = TimerComponent(
+      period: 1.0,
+      onTick: game.restartCurrentLevel,
+      removeOnFinish: true,
+    );
+    game.add(restartTimer);
+  }
+
+  void fall() {
+    const jumpHeight = 50.0;
+    const jumpDuration = 0.3;
+    const fallDuration = 1.0;
+
+    final jumpUp = MoveByEffect(
+      Vector2(0, -jumpHeight),
+      EffectController(
+        duration: jumpDuration,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    final fallDown = MoveByEffect(
+      Vector2(0, jumpHeight * 10),
+      EffectController(
+        duration: fallDuration,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    add(
+      SequenceEffect([
+        jumpUp,
+        fallDown,
+      ]),
+    );
+    add(
+      RotateEffect.by(
+        tau / (isFlippedHorizontally ? 8 : -8),
+        EffectController(
+          duration: 0.5,
+          curve: Curves.easeIn,
+        ),
+      ),
+    );
   }
 }
