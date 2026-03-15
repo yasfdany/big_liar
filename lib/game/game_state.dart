@@ -41,6 +41,9 @@ class GameState {
   bool _levelComplete = false;
   bool get levelComplete => _levelComplete;
 
+  bool _gameComplete = false;
+  bool get gameComplete => _gameComplete;
+
   String get levelName => levels[currentLevel];
 
   void completeFlagAnimation() {
@@ -51,9 +54,11 @@ class GameState {
 
   bool nextLevel() {
     if (_currentLevel + 1 > levels.length - 1) {
+      _gameComplete = true;
       return false;
     }
     _currentLevel++;
+    _gameComplete = false;
     _flagRaised = false;
     _flagAnimationComplete = false;
     _levelComplete = false;

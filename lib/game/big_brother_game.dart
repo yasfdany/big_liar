@@ -2,6 +2,7 @@ import 'package:big_brother/entities/level/level_entity.dart';
 import 'package:big_brother/entities/ui/circular_wipe_transition.dart';
 import 'package:big_brother/game/game_state.dart';
 import 'package:big_brother/game/sfx_manager.dart';
+import 'package:big_brother/overlays/to_be_continued_overlay.dart';
 import 'package:big_brother/overlays/virtual_gamepad.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
@@ -103,6 +104,9 @@ class BigBrotherGame extends FlameGame
 
     final hasNextLevel = GameState.instance.nextLevel();
     if (!hasNextLevel) {
+      _transitioning = false;
+      overlays.remove('virtual_gamepad');
+      overlays.add('to_be_continued');
       return;
     }
 
@@ -225,6 +229,7 @@ class _BigBrotherScreenState extends State<BigBrotherScreen>
       game: game,
       overlayBuilderMap: {
         'virtual_gamepad': (_, __) => VirtualGamepadOverlay(game: game),
+        'to_be_continued': (_, __) => const ToBeContinuedOverlay(),
       },
     );
   }
