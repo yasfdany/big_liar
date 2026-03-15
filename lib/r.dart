@@ -50,6 +50,7 @@ class AssetUi {
 	static const String iconCoin = 'assets/images/ui/icon_coin.png';
 	static const String iconHeart = 'assets/images/ui/icon_heart.png';
 	static const String iconSuspicion = 'assets/images/ui/icon_suspicion.png';
+	static const String restart = 'assets/images/ui/restart.png';
 }
 
 class AssetObjects {

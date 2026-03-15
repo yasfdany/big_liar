@@ -15,6 +15,7 @@ import 'package:big_brother/entities/level/solid_platform.dart';
 import 'package:big_brother/entities/object/flag/flag.dart';
 import 'package:big_brother/entities/object/spike/spike.dart';
 import 'package:big_brother/entities/ui/item_counter_hud.dart';
+import 'package:big_brother/entities/ui/restart_button_hud.dart';
 import 'package:big_brother/entities/ui/suspicion_hud.dart';
 import 'package:big_brother/game/game_state.dart';
 import 'package:collection/collection.dart';
@@ -182,6 +183,7 @@ class LevelEntity extends PositionedEntity with HasGameReference {
     }
 
     add(ItemCounterHud());
+    add(RestartButtonHud(position: Vector2(size.x / 2 - 8, -16)));
     add(SuspicionHud(position: Vector2(size.x - 88, -20)));
   }
 }
