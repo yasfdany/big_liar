@@ -1,6 +1,28 @@
 # Changelog
 
-## [Unreleased] - 2026-03-11
+## [Unreleased] - 2026-03-13
+
+### Added
+
+- **Bonus action system** (`lib/entities/hero/behavior/keyboard_movement_behavior.dart`): Implemented timed input rewards for successfully pressing buttons when prompted.
+  - **Triple jump bonus**: When jump button (W/Up Arrow) is pressed successfully in time, grants ability to perform a third jump after double jump.
+  - **Extended dash bonus**: When dash button (Space) is pressed successfully in time, increases next dash duration from 0.15s to 0.4s.
+  - **One-time use**: Both bonuses are consumed after single use, reverting to normal behavior (double jump only, normal dash duration) until next successful button press.
+  - Added tracking variables `_jumpBonusActive`, `_dashBonusActive`, and `_hasTripleJumped` to manage bonus states.
+  - Bonus is granted when `button.resetButton(collect: true)` is called, indicating successful timing.
+  - Triple jump uses the existing `doubleJump` animation state for visual consistency.
+
+- **Rainbow particle outline effect** (`lib/entities/hero/behavior/particle_effect_behavior.dart`): Implemented animated rainbow particles around the hero when triple jump bonus is active.
+  - **Particle-based approach**: Uses Flame's particle system for reliable cross-platform rendering.
+  - **Rainbow color generation**: Creates 8 rainbow-colored particles using HSV color space positioned in a circle around the hero.
+  - **Expanding animation**: Particles spawn at 0.8x hero radius and expand outward to 1.3x with pulsing size effects.
+  - **Debug integration**: Added comprehensive debug output to track bonus activation and particle spawning.
+  - **Performance optimized**: Particles spawn every 0.1 seconds while bonus is active, with automatic cleanup.
+  - **Visual feedback**: Clear indication of triple jump bonus availability with animated rainbow outline effect.
+
+---
+
+## [Previous] - 2026-03-11
 
 ### Added
 

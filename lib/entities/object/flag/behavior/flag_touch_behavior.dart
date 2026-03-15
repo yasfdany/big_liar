@@ -1,6 +1,7 @@
 import 'package:big_brother/entities/hero/hero_entity.dart';
 import 'package:big_brother/entities/object/flag/flag.dart';
 import 'package:big_brother/game/game_state.dart';
+import 'package:big_brother/game/sfx_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
@@ -22,6 +23,9 @@ class FlagTouchBehavior extends CollisionBehavior<HeroEntity, FlagEntity> {
 
     // Only raise flag if all items have been collected
     if (_gameState.allItemsCollected) {
+      // Play flag raising sound
+      SfxManager.instance.playFlag();
+
       _gameState.flagRaised = true;
       _triggered = true;
       parent.raise();

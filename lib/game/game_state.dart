@@ -1,3 +1,5 @@
+import 'package:big_brother/game/sfx_manager.dart';
+
 class GameState {
   GameState._();
 
@@ -74,6 +76,9 @@ class GameState {
   void addSuspicion([double amount = _suspicionPerFailure]) {
     _suspicion = (_suspicion + amount).clamp(0, 100);
     _notify(_suspicionListeners);
+
+    // Play damage sound when suspicion is added
+    SfxManager.instance.playDamage(volume: 0.7);
   }
 
   void tick(double dt) {

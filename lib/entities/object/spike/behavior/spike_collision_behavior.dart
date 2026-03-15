@@ -2,6 +2,7 @@ import 'package:big_brother/entities/hero/behavior/random_input_behavior.dart';
 import 'package:big_brother/entities/hero/hero_entity.dart';
 import 'package:big_brother/entities/object/spike/spike.dart';
 import 'package:big_brother/game/big_brother_game.dart';
+import 'package:big_brother/game/sfx_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/geometry.dart';
@@ -19,6 +20,10 @@ class SpikeCollisionBehavior extends CollisionBehavior<HeroEntity, Spike> {
     if (other.state == HeroState.hit) {
       return;
     }
+
+    // Play death sounds simultaneously
+    SfxManager.instance.playDeathScream();
+    SfxManager.instance.playFalling(volume: 0.1);
 
     fall(other);
 

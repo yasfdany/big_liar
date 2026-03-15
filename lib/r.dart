@@ -62,3 +62,16 @@ class AssetFonts {
 	static const String lanaPixel = 'assets/fonts/lana_pixel.ttf';
 }
 
+class AssetAudios {
+	static const String sfxCollect = 'assets/audios/sfx_collect.wav';
+	static const String sfxCollectt = 'assets/audios/sfx_collectt.wav';
+	static const String sfxDamage = 'assets/audios/sfx_damage.wav';
+	static const String sfxDash = 'assets/audios/sfx_dash.wav';
+	static const String sfxDeathscream = 'assets/audios/sfx_deathscream.wav';
+	static const String sfxFalling = 'assets/audios/sfx_falling.wav';
+	static const String sfxFlag = 'assets/audios/sfx_flag.wav';
+	static const String sfxFlagg = 'assets/audios/sfx_flagg.wav';
+	static const String sfxFootstep = 'assets/audios/sfx_footstep.wav';
+	static const String sfxJump = 'assets/audios/sfx_jump.wav';
+}
+

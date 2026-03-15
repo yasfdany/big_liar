@@ -1,6 +1,7 @@
 import 'package:big_brother/entities/level/level_entity.dart';
 import 'package:big_brother/entities/ui/circular_wipe_transition.dart';
 import 'package:big_brother/game/game_state.dart';
+import 'package:big_brother/game/sfx_manager.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,13 @@ class BigBrotherGame extends FlameGame
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    SfxManager.instance.initialize().catchError((error) {
+      debugPrint(
+        'Game: Audio initialization failed, continuing without sound: $error',
+      );
+    });
+
     camera.viewfinder.zoom = 1.5;
 
     level = LevelEntity(levelName: GameState.instance.levelName);
@@ -100,10 +108,8 @@ class BigBrotherGame extends FlameGame
 
     world.removeAll(world.children);
 
-    // Reset the game state for the current level
     GameState.instance.reset();
 
-    // Reload the same level
     final currentLevelName = GameState.instance.levelName;
     level = LevelEntity(levelName: currentLevelName);
     world.add(level);
@@ -119,6 +125,11 @@ class BigBrotherGame extends FlameGame
   void dispose() {
     GameState.instance.removeLevelCompleteListener(_onLevelComplete);
     world.removeAll(world.children);
+
+    SfxManager.instance.dispose().catchError((error) {
+      debugPrint('Game: Failed to dispose audio resources: $error');
+    });
+
     super.dispose();
   }
 
@@ -142,6 +153,7 @@ class BigBrotherScreen extends StatefulWidget {
 class _BigBrotherScreenState extends State<BigBrotherScreen>
     with WidgetsBindingObserver {
   final game = BigBrotherGame();
+  bool _gameStarted = false;
 
   @override
   void initState() {
@@ -167,6 +179,35 @@ class _BigBrotherScreenState extends State<BigBrotherScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (!_gameStarted) {
+      return _buildStartScreen();
+    }
     return GameWidget(game: game);
+  }
+
+  Widget _buildStartScreen() {
+    return Scaffold(
+      backgroundColor: const Color(0xff211f30),
+      body: GestureDetector(
+        onTap: _startGame,
+        behavior: HitTestBehavior.opaque,
+        child: const Center(
+          child: Text(
+            'Click to start',
+            style: TextStyle(
+              fontFamily: 'lana_pixel',
+              fontSize: 32,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _startGame() {
+    setState(() {
+      _gameStarted = true;
+    });
   }
 }
