@@ -268,7 +268,7 @@ class SfxManager {
 
     try {
       await _soloud.disposeAllSources();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('SFX Manager: Failed to stop all sounds: $e');
     }
   }

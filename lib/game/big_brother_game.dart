@@ -1,6 +1,9 @@
+import 'package:big_brother/entities/hero/behavior/keyboard_movement_behavior.dart';
+import 'package:big_brother/entities/hero/hero.dart';
 import 'package:big_brother/entities/level/level_entity.dart';
 import 'package:big_brother/entities/ui/circular_wipe_transition.dart';
 import 'package:big_brother/game/game_state.dart';
+import 'package:big_brother/game/input/gamepad_channel.dart';
 import 'package:big_brother/game/sfx_manager.dart';
 import 'package:big_brother/overlays/to_be_continued_overlay.dart';
 import 'package:big_brother/overlays/virtual_gamepad.dart';
@@ -19,6 +22,10 @@ class BigBrotherGame extends FlameGame
   CircularWipeTransition? _currentTransition;
   bool _transitioning = false;
   bool _wasPortrait = false;
+
+  // Physical gamepad support (web platform channel)
+  final GamepadChannel _gamepadChannel = GamepadChannel();
+  bool _gamepadWasActive = false;
 
   double _calculateOptimalZoom() {
     final isPortrait = size.y > size.x;
@@ -168,12 +175,56 @@ class BigBrotherGame extends FlameGame
   void dispose() {
     GameState.instance.removeLevelCompleteListener(_onLevelComplete);
     world.removeAll(world.children);
+    _gamepadChannel.dispose();
 
     SfxManager.instance.dispose().catchError((error) {
       debugPrint('Game: Failed to dispose audio resources: $error');
     });
 
     super.dispose();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _pollGamepad();
+  }
+
+  void _pollGamepad() {
+    if (!_gamepadChannel.isSupported) {
+      return;
+    }
+    _gamepadChannel.poll();
+
+    final hero = level.children.whereType<HeroEntity>().firstOrNull;
+    if (hero == null) {
+      return;
+    }
+
+    final behavior =
+        hero.children.whereType<KeyboardMovementBehavior>().firstOrNull;
+    if (behavior == null) {
+      return;
+    }
+
+    // Directional input (left stick + d-pad)
+    final axis = _gamepadChannel.horizontalAxis;
+    final hasDirection = axis != 0;
+
+    if (hasDirection || _gamepadWasActive) {
+      behavior.setMovementDirection(axis.clamp(-1, 1).toDouble());
+      _gamepadWasActive = hasDirection;
+    }
+
+    // A button → jump (edge-triggered)
+    if (_gamepadChannel.isAJustPressed) {
+      behavior.triggerJump();
+    }
+
+    // B button → dash (edge-triggered)
+    if (_gamepadChannel.isBJustPressed) {
+      behavior.triggerDash();
+    }
   }
 
   @override
